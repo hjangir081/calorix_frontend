@@ -1,5 +1,3 @@
-import 'package:calorix_app/utils/constants/countries.dart';
-
 import '../widgets/phone_input_field.dart';
 
 enum AuthStatus { initial, loading, success, error }
@@ -10,6 +8,8 @@ class AuthState {
   final CountryCode selectedCountry;
   final AuthStatus status;
   final String? errorMessage;
+  final dynamic response;
+  final String? tempToken;
 
   const AuthState({
     this.phoneText = '',
@@ -17,6 +17,8 @@ class AuthState {
     required this.selectedCountry,
     this.status = AuthStatus.initial,
     this.errorMessage,
+    this.response,
+    this.tempToken,
   });
 
   AuthState copyWith({
@@ -25,13 +27,17 @@ class AuthState {
     CountryCode? selectedCountry,
     AuthStatus? status,
     String? errorMessage,
+    dynamic response,
+    String? tempToken,
   }) {
     return AuthState(
       phoneText: phoneText ?? this.phoneText,
       otpText: otpText ?? this.otpText,
       selectedCountry: selectedCountry ?? this.selectedCountry,
       status: status ?? this.status,
-      errorMessage: errorMessage,           // null clears the error
+      errorMessage: errorMessage,
+      response: response ?? this.response,
+      tempToken: tempToken ?? this.tempToken,
     );
   }
 }

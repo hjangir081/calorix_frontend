@@ -16,34 +16,32 @@ Future<void> initializeApp() async {
   final dio = Dio();
   final appRouter = AppRouter();
 
-  dio.interceptors.add(PrettyDioLogger(
-    requestHeader: true,
-    requestBody: true,
-    responseHeader: true,
-    responseBody: true,
-    compact: false,
-    maxWidth: 120,
-  ));
+  dio.interceptors.add(
+    PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      compact: false,
+      maxWidth: 120,
+    ),
+  );
 
   getIt.registerSingleton<Dio>(dio);
 
   getIt.registerLazySingleton<FlutterSecureStorage>(
-        () => const FlutterSecureStorage(),
+    () => const FlutterSecureStorage(),
   );
 
   getIt.registerLazySingleton<TokenStorage>(
-        () => TokenStorageImpl(getIt<FlutterSecureStorage>()),
+    () => TokenStorageImpl(getIt<FlutterSecureStorage>()),
   );
 
-  // ✅ ApiService (NOW Dio exists)
-  /*getIt.registerSingleton<ApiService>(
-    ApiService(getIt<Dio>()),
-  );*/
+  getIt.registerSingleton<ApiService>(ApiService(getIt<Dio>()));
 
-  // ✅ Repository
- /* getIt.registerSingleton<ApiRepository>(
+  getIt.registerSingleton<ApiRepository>(
     ApiRepositoryImpl(getIt<ApiService>()),
-  );*/
+  );
 
   getIt.registerLazySingleton<AppRouter>(() => appRouter);
 }

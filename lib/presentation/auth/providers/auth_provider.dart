@@ -1,7 +1,13 @@
+import 'dart:io';
 import 'package:calorix_app/utils/constants/countries.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import '../../../config/di/injector.dart';
+import '../../../data/core/data_state.dart';
+import '../../../domain/models/request/send_otp_request_model.dart';
+import '../../../domain/models/request/verify_otp_request_model.dart';
+import '../../../domain/repositories/api_repository.dart';
 import '../../provider/phone_provider.dart';
 import '../widgets/phone_input_field.dart';
 import 'auth_state.dart';
@@ -11,6 +17,7 @@ StateNotifierProvider<AuthNotifier, AuthState>(
       (ref) => AuthNotifier(ref),
 );
 
+final repo = getIt<ApiRepository>();
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final Ref _ref;
@@ -42,14 +49,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // ─── Send OTP API ────────────────────────────────────
   Future<void> sendOtp() async {
     final country = _ref.read(phoneProvider);
+
     state = state.copyWith(status: AuthStatus.loading);
+
     try {
-      // await ApiService.sendOtp(
-      //   phone: state.phoneText,
-      //   dialCode: country.dialCode,
-      // );
-      // ✅ don't set success until API is real
-      state = state.copyWith(status: AuthStatus.success);
+      final repo = getIt<ApiRepository>();
+
+      final result = await repo.sendOtp(
+        sendOtpRequestModel: SendOtpRequestModel(
+          countryCode: country.dialCode,
+          phoneNumber: state.phoneText,
+        ),
+      );
+
+      if (result is DataSuccess) {
+        state = state.copyWith(status: AuthStatus.success);
+      } else if (result is DataFailed) {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: result.exception?.response?.data['message'],
+        );
+      }
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
@@ -61,11 +81,53 @@ class AuthNotifier extends StateNotifier<AuthState> {
 // ─── Verify OTP API ──────────────────────────────────
   Future<void> verifyOtp(String otp) async {
     if (otp.length < 4) return;
+
+    final country = _ref.read(phoneProvider);
+
     state = state.copyWith(status: AuthStatus.loading);
+    String getDeviceType() {
+      if (Platform.isAndroid) return "android";
+      if (Platform.isIOS) return "ios";
+      return "web";
+    }
     try {
-      // await ApiService.verifyOtp(otp: otp);
-      // ✅ don't set success until API is real
-      state = state.copyWith(status: AuthStatus.success);
+      final repo = getIt<ApiRepository>();
+
+      final result = await repo.verifyOtp(
+        verifyOtpRequestModel: VerifyOtpRequestModel(
+          countryCode: country.dialCode,
+          phoneNumber: state.phoneText,
+          otp: otp,
+          deviceType: getDeviceType(),
+          fcmToken: "abc123",    // later from Firebase
+        ),
+      );
+
+      if (result is DataSuccess) {
+        final res = result.data;
+
+        state = state.copyWith(
+          status: AuthStatus.success,
+          response: result.data,
+          errorMessage: null,
+            tempToken: res?.result?.tempToken
+        );
+
+        if (res?.result?.isRegistered == true) {
+          // Navigate to home
+          debugPrint("LOGIN SUCCESS");
+        } else {
+          // Navigate to complete profile
+          debugPrint("NEW USER → COMPLETE PROFILE");
+        }
+
+      } else if (result is DataFailed) {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: result.exception?.response?.data['Errors']?[0]?['Message'],
+        );
+      }
+
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,

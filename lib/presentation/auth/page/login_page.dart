@@ -38,14 +38,16 @@ class LoginPage extends ConsumerWidget {
       ),
     );
     ref.listen(authProvider, (prev, next) {
-      if (prev?.status != AuthStatus.success &&
-          next.status == AuthStatus.success) {
+      if (next.status == AuthStatus.success &&
+          prev?.status != AuthStatus.success) {
         context.router.push(OtpRoute());
       }
 
       if (next.status == AuthStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? 'Something went wrong')),
+        AppTopSnackbar.show(
+          context,
+          next.errorMessage ?? 'Something went wrong',
+          type: SnackbarType.error,
         );
         notifier.reset();
       }

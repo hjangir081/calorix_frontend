@@ -1,5 +1,5 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format width=80
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
 // AutoRouterGenerator
@@ -20,7 +20,7 @@ import 'package:calorix_app/presentation/auth/page/setting_profile.dart' as _i9;
 import 'package:calorix_app/presentation/auth/page/weight_page.dart' as _i10;
 import 'package:calorix_app/presentation/dashboard/dashboard_page.dart' as _i2;
 import 'package:calorix_app/presentation/home/page/home_page.dart' as _i5;
-import 'package:flutter/foundation.dart' as _i12;
+import 'package:flutter/material.dart' as _i12;
 
 /// generated route for
 /// [_i1.CreateProfilePage]

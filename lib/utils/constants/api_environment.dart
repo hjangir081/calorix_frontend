@@ -1,7 +1,9 @@
 class ApiEnvironment{
-  static const baseUrl = 'https://api-smartpay-dev-001.azurewebsites.net/';
+  static const baseUrl = 'http://localhost:5000/';
   static const apiPrefix = 'api/';
 
   // End Points
-  static const login = 'Account/Login';
+  static const sendOtp = 'auth/send-otp';
+  static const verifyOtp = 'auth/verify-otp';
+  static const completeProfile = 'user/complete-profile';
 }

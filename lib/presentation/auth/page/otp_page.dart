@@ -33,14 +33,23 @@ class OtpPage extends ConsumerWidget {
     final seconds = ref.watch(otpTimerProvider);
     final timerNotifier = ref.read(otpTimerProvider.notifier);
     ref.listen(authProvider, (prev, next) {
-      if (prev?.status != AuthStatus.success &&
-          next.status == AuthStatus.success) {
-        context.router.push(CreateProfileRoute());
+      if (next.status == AuthStatus.success &&
+          prev?.status != AuthStatus.success) {
+
+        final res = next.response;
+
+        if (res?.result?.isRegistered == true) {
+          context.router.replace(const HomeRoute());
+        } else {
+          context.router.push(CreateProfileRoute());
+        }
       }
 
       if (next.status == AuthStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? 'Invalid OTP')),
+        AppTopSnackbar.show(
+          context,
+          next.errorMessage ?? 'Invalid OTP',
+          type: SnackbarType.error,
         );
         notifier.reset();
       }
@@ -131,10 +140,10 @@ class OtpPage extends ConsumerWidget {
                                 onChanged: (val) => notifier.updateOtp(val),
                                 onCompleted: (val) {
                                   notifier.updateOtp(val);
-                                  () {
-                                    if (authState.otpText.length < 4) return;
-                                    notifier.verifyOtp(authState.otpText);
-                                  };
+
+                                  if (val.length < 4) return;
+
+                                  notifier.verifyOtp(val);
                                 },
                               ),
                               AppGaps.h16(context),

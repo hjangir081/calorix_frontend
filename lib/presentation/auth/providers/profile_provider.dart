@@ -1,15 +1,25 @@
+import 'dart:io';
+
 import 'package:calorix_app/presentation/auth/providers/profile_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
+import '../../../config/di/injector.dart';
+import '../../../data/core/data_state.dart';
+import '../../../domain/models/request/complete_profile_request_model.dart';
+import '../../../domain/repositories/api_repository.dart';
+import '../../../domain/repositories/token_storage.dart';
 import '../../../utils/validators/app_validators.dart';
+import 'auth_provider.dart';
 
 final profileProvider =
 StateNotifierProvider<ProfileNotifier, ProfileState>(
-      (ref) => ProfileNotifier(),
+      (ref) => ProfileNotifier(ref),
 );
-
 class ProfileNotifier extends StateNotifier<ProfileState> {
-  ProfileNotifier() : super(const ProfileState());
+  final Ref _ref;
+
+  ProfileNotifier(this._ref) : super(const ProfileState());
 
   // ─── Update Fields ─────────────────────────────
 
@@ -173,14 +183,58 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   Future<void> submitProfile() async {
     state = state.copyWith(status: ProfileStatus.loading);
-
+    String getDeviceType() {
+      if (Platform.isAndroid) return "android";
+      if (Platform.isIOS) return "ios";
+      return "web";
+    }
     try {
-      // 🔥 Call your API here
-      // await ApiService.createProfile(...);
+      final repo = getIt<ApiRepository>();
 
-      await Future.delayed(const Duration(seconds: 2)); // mock
+      final authState = _ref.read(authProvider);
+      final tempToken = authState.tempToken;
 
-      state = state.copyWith(status: ProfileStatus.success);
+      final result = await repo.completeProfile(
+        tempToken: 'Bearer $tempToken',
+        completeProfileRequestModel: CompleteProfileRequestModel(
+          firstName: state.firstName,
+          lastName: state.lastName,
+          email: state.email,
+          dob: state.dob!,
+          gender: state.gender!,
+          weight: int.parse(state.weight!),
+          height: int.parse(state.height!),
+          goal: state.goal!,
+          deviceType: getDeviceType(),
+          fcmToken: "abc123", // replace later
+        ),
+      );
+
+      if (result is DataSuccess) {
+        final res = result.data;
+
+        // 🔐 SAVE TOKENS (VERY IMPORTANT)
+        final accessToken = res?.result?.accessToken;
+        final refreshToken = res?.result?.refreshToken;
+
+        final storage = getIt<TokenStorage>();
+
+        await storage.saveTokens(accessToken ?? '', refreshToken ?? '');
+
+        // ❌ remove tempToken
+        _ref.read(authProvider.notifier).reset();
+
+        state = state.copyWith(status: ProfileStatus.success);
+
+      } else if (result is DataFailed) {
+        state = state.copyWith(
+          status: ProfileStatus.error,
+          errorMessage: result.exception
+              ?.response
+              ?.data['Errors']?[0]?['Message'],
+        );
+      }
+
     } catch (e) {
       state = state.copyWith(
         status: ProfileStatus.error,

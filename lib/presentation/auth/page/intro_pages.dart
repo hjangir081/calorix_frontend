@@ -30,7 +30,7 @@ class IntroPages extends ConsumerWidget {
       if (index < introData.length - 1) {
         notifier.state++;
       } else {
-        context.router.replaceAll([DashboardRoute()]);
+        context.router.replaceAll([LoginRoute()]);
       }
     }
 
