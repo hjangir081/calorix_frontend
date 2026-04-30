@@ -206,7 +206,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
           height: int.parse(state.height!),
           goal: state.goal!,
           deviceType: getDeviceType(),
-          fcmToken: "abc123", // replace later
+          fcmToken: "abc123",
         ),
       );
 

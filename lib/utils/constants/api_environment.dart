@@ -6,4 +6,5 @@ class ApiEnvironment{
   static const sendOtp = 'auth/send-otp';
   static const verifyOtp = 'auth/verify-otp';
   static const completeProfile = 'user/complete-profile';
+  static const getAgenda = 'meals/daily-agenda';
 }

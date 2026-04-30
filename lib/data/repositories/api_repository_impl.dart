@@ -2,6 +2,7 @@ import 'package:calorix_app/domain/models/request/complete_profile_request_model
 import 'package:calorix_app/domain/models/request/send_otp_request_model.dart';
 import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart';
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
 import 'package:calorix_app/domain/models/response/verify_otp_response_model.dart';
 
@@ -35,6 +36,14 @@ class ApiRepositoryImpl extends BaseApiRepository implements ApiRepository {
     // TODO: implement signIn
     return getStateOf<CompleteProfileResponseModel>(
       request: () => _apiService.completeProfile(completeProfileRequest: completeProfileRequestModel, tempToken: tempToken),
+    );
+  }
+
+  @override
+  Future<DataState<GetAgendaResponseModel>> getAgenda({required String token}) {
+    // TODO: implement signIn
+    return getStateOf<GetAgendaResponseModel>(
+      request: () => _apiService.getAgenda(token: token),
     );
   }
 }

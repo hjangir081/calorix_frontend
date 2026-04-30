@@ -1,59 +1,66 @@
 import 'dart:math';
-import 'package:calorix_app/presentation/auth/widgets/app_gaps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:calorix_app/utils/design/app_colors.dart';
 import 'package:calorix_app/utils/design/app_media_query.dart';
 import 'package:calorix_app/utils/design/app_text.dart';
 
-import '../provider/track_calorie_provider.dart';
+class CalorieGauge extends StatelessWidget {
+  final int consumed;
+  final int total;
+  final int burned; // optional (can pass 0)
 
-class CalorieGauge extends ConsumerWidget {
-  const CalorieGauge({super.key});
+  const CalorieGauge({
+    super.key,
+    required this.consumed,
+    required this.total,
+    this.burned = 0,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(calorieProvider);
-    final progress = state.consumed / state.goal;
+  Widget build(BuildContext context) {
+    final progress =
+    total > 0 ? (consumed / total).clamp(0.0, 1.0) : 0.0;
 
-    // Example values (replace with provider logic if available)
-    final burned = 320;
-    final remaining = state.goal - state.consumed;
-    final net = state.consumed - burned;
+    final remaining = (total - consumed).clamp(0, total);
+    final net = consumed - burned;
+
+    final isExceeded = consumed > total;
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: AppMediaQuery.height(context)*.012),
+      padding: EdgeInsets.symmetric(
+        vertical: AppMediaQuery.height(context) * .012,
+      ),
       decoration: BoxDecoration(
         color: AppColors.secondaryColor.withOpacity(.04),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Title
           Text(
             "TODAY'S CALORIES",
             style: AppQuicksandText.title(context).copyWith(
-              color: AppColors.black,
               fontWeight: FontWeight.w700,
             ),
           ),
-          // Gauge
+
           SizedBox(
             width: AppMediaQuery.width(context) * .6,
             height: AppMediaQuery.height(context) * .15,
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                SizedBox(
-                  width: AppMediaQuery.width(context) * .55,
-                  height: AppMediaQuery.height(context) * .15,
-                  child: CustomPaint(painter: _ArcPainter(progress)),
+                CustomPaint(
+                  size: Size(
+                    AppMediaQuery.width(context) * .55,
+                    AppMediaQuery.height(context) * .15,
+                  ),
+                  painter: _ArcPainter(progress, isExceeded),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text("🔥", style: TextStyle(fontSize: 28)),
+
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -63,17 +70,18 @@ class CalorieGauge extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: "${state.consumed} kcal\n",
+                            text: "$consumed kcal\n",
                             style: AppQuicksandText.title(context).copyWith(
-                              color: AppColors.black,
-                              fontWeight: FontWeight.w600,
+                              color: isExceeded
+                                  ? Colors.red
+                                  : AppColors.black,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                           TextSpan(
-                            text: "of ${state.goal} kcal goal",
+                            text: "of $total kcal goal",
                             style: AppQuicksandText.body(context).copyWith(
                               color: AppColors.gray,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -104,7 +112,11 @@ class CalorieGauge extends ConsumerWidget {
 class _StatItem extends StatelessWidget {
   final String label;
   final String value;
-  const _StatItem({required this.label, required this.value});
+
+  const _StatItem({
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +125,9 @@ class _StatItem extends StatelessWidget {
         Text(label,
             style: AppQuicksandText.body(context).copyWith(
               color: AppColors.gray,
-              fontWeight: FontWeight.w500,
             )),
         Text(value,
             style: AppQuicksandText.bodyLarge(context).copyWith(
-              color: AppColors.black,
               fontWeight: FontWeight.w600,
             )),
       ],
@@ -127,7 +137,9 @@ class _StatItem extends StatelessWidget {
 
 class _ArcPainter extends CustomPainter {
   final double progress;
-  _ArcPainter(this.progress);
+  final bool isExceeded;
+
+  _ArcPainter(this.progress, this.isExceeded);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -136,7 +148,7 @@ class _ArcPainter extends CustomPainter {
       radius: size.width / 2,
     );
 
-    final startAngle = -pi; // semicircle start
+    final startAngle = -pi;
     final sweepAngle = pi * progress;
 
     final bgPaint = Paint()
@@ -146,27 +158,29 @@ class _ArcPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     final fgPaint = Paint()
-      ..shader = const LinearGradient(
-        colors: [Colors.red, Colors.orange],
+      ..shader = LinearGradient(
+        colors: isExceeded
+            ? [Colors.red, Colors.redAccent]
+            : [Colors.red, Colors.orange],
       ).createShader(rect)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 18
       ..strokeCap = StrokeCap.round;
 
-    // background arc
     canvas.drawArc(rect, startAngle, pi, false, bgPaint);
-
-    // progress arc
     canvas.drawArc(rect, startAngle, sweepAngle, false, fgPaint);
 
-    // progress dot
     final angle = startAngle + sweepAngle;
     final radius = size.width / 2;
+
     final dx = size.width / 2 + radius * cos(angle);
     final dy = size.height + radius * sin(angle);
 
-    final dotPaint = Paint()..color = Colors.white;
-    canvas.drawCircle(Offset(dx, dy), 8, dotPaint);
+    canvas.drawCircle(
+      Offset(dx, dy),
+      8,
+      Paint()..color = Colors.white,
+    );
   }
 
   @override

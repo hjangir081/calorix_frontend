@@ -6,17 +6,29 @@ import 'package:calorix_app/utils/design/app_colors.dart';
 import 'package:calorix_app/utils/design/app_media_query.dart';
 import 'package:calorix_app/utils/design/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/services/common_functions.dart';
+import '../provider/get_agenda_provider.dart';
+import '../provider/get_agenda_state.dart';
 import '../widget/calorie_gauge.dart';
 import '../widget/macronutrient_widget.dart';
 
 @RoutePage()
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final agendaState = ref.watch(agendaProvider);
+
+    if (agendaState.status == AgendaStatus.initial) {
+      Future.microtask(() {
+        ref.read(agendaProvider.notifier).getDailyAgenda();
+      });
+    }
+
+    final data = agendaState.data;
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -65,14 +77,29 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: .center,
           children: [
             AppGaps.h(context, 22),
-            CalorieGauge(),
+            CalorieGauge(
+              consumed: data?.caloriesConsumed ?? 0,
+              total: data?.caloriesTarget ?? 1,
+            ),
             AppGaps.h(context, 22),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MacroProgressItem(title: "Protein", grams: 120, totalCalories: 2213),
-                MacroProgressItem(title: "Carbs", grams: 250, totalCalories: 2213),
-                MacroProgressItem(title: "Fat", grams: 70, totalCalories: 2213),
+                MacroProgressItem(
+                  title: "Protein",
+                  grams: data?.proteinConsumed ?? 0,
+                  totalCalories: data?.proteinTarget ?? 1,
+                ),
+                MacroProgressItem(
+                  title: "Carbs",
+                  grams: data?.carbsConsumed ?? 0,
+                  totalCalories: data?.carbsTarget ?? 1,
+                ),
+                MacroProgressItem(
+                  title: "Fat",
+                  grams: data?.fatConsumed ?? 0,
+                  totalCalories: data?.fatTarget ?? 1,
+                ),
               ],
             ),
           ],
