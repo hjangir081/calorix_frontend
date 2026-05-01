@@ -2,9 +2,11 @@ import 'package:calorix_app/domain/models/request/complete_profile_request_model
 import 'package:calorix_app/domain/models/request/send_otp_request_model.dart';
 import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart';
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
+import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
 import 'package:calorix_app/domain/models/response/verify_otp_response_model.dart';
+import 'package:dio/dio.dart';
 
 import '../../domain/repositories/api_repository.dart';
 import '../core/data_state.dart';
@@ -44,6 +46,26 @@ class ApiRepositoryImpl extends BaseApiRepository implements ApiRepository {
     // TODO: implement signIn
     return getStateOf<GetAgendaResponseModel>(
       request: () => _apiService.getAgenda(token: token),
+    );
+  }
+
+  @override
+  Future<DataState<FoodScanResponseModel>> foodScan({
+    required String token,
+    required String image,
+  }) {
+    return getStateOf<FoodScanResponseModel>(
+      request: () async {
+        final file = await MultipartFile.fromFile(
+          image,
+          filename: image.split('/').last,
+        );
+
+        return _apiService.foodScan(
+          token: token,
+          image: file,
+        );
+      },
     );
   }
 }

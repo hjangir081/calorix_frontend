@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../config/di/injector.dart';
 import '../../../config/router/app_router.gr.dart';
+import '../../../domain/repositories/token_storage.dart';
 import '../../../utils/constants/app_strings.dart';
 import '../../provider/intro_provider.dart';
 
@@ -26,10 +28,12 @@ class IntroPages extends ConsumerWidget {
 
     final data = introData[index];
 
-    void nextPage() {
+    void nextPage() async{
       if (index < introData.length - 1) {
         notifier.state++;
       } else {
+        final storage = getIt<TokenStorage>();
+        await storage.setIntroSeen();
         context.router.replaceAll([LoginRoute()]);
       }
     }
@@ -47,7 +51,10 @@ class IntroPages extends ConsumerWidget {
         actions: [
           AppPadding(
             child: GestureDetector(
-              onTap: (){context.router.replaceAll([LoginRoute()]);},
+              onTap: ()async{
+                final storage = getIt<TokenStorage>();
+                await storage.setIntroSeen();
+                context.router.replaceAll([LoginRoute()]);},
               child: Text(
                 AppBtnStrings.skip,
                 style: AppQuicksandText.title(

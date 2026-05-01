@@ -8,6 +8,7 @@ import '../../../data/core/data_state.dart';
 import '../../../domain/models/request/send_otp_request_model.dart';
 import '../../../domain/models/request/verify_otp_request_model.dart';
 import '../../../domain/repositories/api_repository.dart';
+import '../../../domain/repositories/token_storage.dart';
 import '../../provider/phone_provider.dart';
 import '../widgets/phone_input_field.dart';
 import 'auth_state.dart';
@@ -105,7 +106,13 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       if (result is DataSuccess) {
         final res = result.data;
-
+        final tokenStorage = getIt<TokenStorage>();
+        if (res?.result?.accessToken != null) {
+          await tokenStorage.saveTokens(
+            res!.result!.accessToken!,
+            res.result!.refreshToken!,
+          );
+        }
         state = state.copyWith(
           status: AuthStatus.success,
           response: result.data,

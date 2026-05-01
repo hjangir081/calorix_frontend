@@ -8,12 +8,12 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
+    AutoRoute(page: SplashRoute.page, path: AppPaths.splashPage, initial: true),
     CustomRoute(
       page: IntroRoutes.page,
       path: AppPaths.introPage,
       transitionsBuilder: TransitionsBuilders.fadeIn,
       duration: Duration(milliseconds: 200),
-      initial: true
     ),
     CustomRoute(
       page: LoginRoute.page,
@@ -64,5 +64,17 @@ class AppRouter extends RootStackRouter {
       duration: Duration(milliseconds: 200),
     ),
     AutoRoute(page: HomeRoute.page, path: AppPaths.homePage),
+    CustomRoute(
+      page: ScanFoodRoute.page,
+      path: AppPaths.scanFoodPage,
+      transitionsBuilder: TransitionsBuilders.zoomIn,
+      duration: Duration(milliseconds: 200),
+    ),
+    CustomRoute(
+      page: FoodNutrientsRoute.page,
+      path: AppPaths.foodNutrientsPage,
+      transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+      duration: Duration(milliseconds: 200),
+    ),
   ];
 }

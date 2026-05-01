@@ -10,4 +10,6 @@ abstract class AppPaths {
   static const String createProfilePage = '/create_profile_page';
   static const String dashboardPage = '/dashboard_page';
   static const String homePage = '/home_page';
+  static const String scanFoodPage = '/scan_food_page';
+  static const String foodNutrientsPage = '/food_nutrients_page';
 }

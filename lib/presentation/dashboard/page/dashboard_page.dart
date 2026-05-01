@@ -1,11 +1,12 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:calorix_app/config/router/app_router.gr.dart';
 import 'package:calorix_app/presentation/home/page/home_page.dart';
 import 'package:calorix_app/utils/design/app_colors.dart';
 import 'package:calorix_app/utils/design/app_media_query.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/constants/app_images.dart';
+import '../../../utils/constants/app_images.dart';
 
 @RoutePage()
 class DashboardPage extends StatelessWidget {
@@ -34,14 +35,7 @@ class DashboardPage extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(40)),
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, -1),
-                    ),
-                  ],
+                  color: AppColors.primaryColor,
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
@@ -68,15 +62,8 @@ class DashboardPage extends StatelessWidget {
                           icon: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Image.asset(AppImages.home, height: 26,
-                                  color: index == 0 ? AppColors.black : AppColors.gray),
-                              if (index == 0)
-                                Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  height: 2,
-                                  width: 20,
-                                  color: AppColors.primaryColor,
-                                ),
+                              Image.asset(AppImages.home, height: 26, width: 30,
+                                  color: index == 0 ? AppColors.white : AppColors.white),
                             ],
                           ),
                           label: "",
@@ -85,15 +72,8 @@ class DashboardPage extends StatelessWidget {
                           icon: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Image.asset(AppImages.home, height: 26,
-                                  color: index == 1 ? AppColors.black : AppColors.gray),
-                              if (index == 1)
-                                Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  height: 2,
-                                  width: 20,
-                                  color: AppColors.primaryColor,
-                                ),
+                              Image.asset(AppImages.home, height: 26, width: 30,
+                                  color: index == 1 ? AppColors.white : AppColors.white),
                             ],
                           ),
                           label: "",
@@ -106,15 +86,8 @@ class DashboardPage extends StatelessWidget {
                           icon: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Image.asset(AppImages.barChart, height: 26,
-                                  color: index == 3 ? AppColors.black : AppColors.gray),
-                              if (index == 3)
-                                Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  height: 2,
-                                  width: 20,
-                                  color: AppColors.primaryColor,
-                                ),
+                              Image.asset(AppImages.barChart, height: 26, width: 30,
+                                  color: index == 3 ? AppColors.white : AppColors.white),
                             ],
                           ),
                           label: "",
@@ -123,15 +96,8 @@ class DashboardPage extends StatelessWidget {
                           icon: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Image.asset(AppImages.user, height: 26,
-                                  color: index == 4 ? AppColors.black : AppColors.gray),
-                              if (index == 4)
-                                Container(
-                                  margin: const EdgeInsets.only(top: 4),
-                                  height: 2,
-                                  width: 20,
-                                  color: AppColors.primaryColor,
-                                ),
+                              Image.asset(AppImages.user, height: 26, width: 30,
+                                  color: index == 4 ? AppColors.white : AppColors.white),
                             ],
                           ),
                           label: "",
@@ -150,9 +116,9 @@ class DashboardPage extends StatelessWidget {
                   width: AppMediaQuery.width(context)*.15,
                   height: AppMediaQuery.height(context)*.065,
                   child: FloatingActionButton(
-                    elevation: 0,
-                    onPressed: () {},
-                    backgroundColor: AppColors.primaryColor,
+                    elevation: 4,
+                    onPressed: () {context.router.push(ScanFoodRoute());},
+                    backgroundColor: AppColors.white,
                     shape: const CircleBorder(),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     child: Image.asset(AppImages.capture, height: 30, color : AppColors.black)

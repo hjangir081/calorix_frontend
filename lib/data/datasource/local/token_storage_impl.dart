@@ -1,7 +1,6 @@
 // use flutter_secure_storage package
-
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/repositories/token_storage.dart';
 
@@ -10,6 +9,7 @@ class TokenStorageImpl implements TokenStorage {
 
   static const _accessKey = 'ACCESS_TOKEN';
   static const _refreshKey = 'REFRESH_TOKEN';
+  static const _introKey = 'INTRO_SEEN';
 
   TokenStorageImpl(this._storage);
 
@@ -33,6 +33,16 @@ class TokenStorageImpl implements TokenStorage {
   @override
   Future<void> clear() async {
     await _storage.deleteAll();
+  }
+
+  Future<bool> isIntroSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_introKey) ?? false;
+  }
+
+  Future<void> setIntroSeen() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_introKey, true);
   }
 }
 

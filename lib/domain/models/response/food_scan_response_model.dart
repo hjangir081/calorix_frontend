@@ -1,4 +1,4 @@
-class VerifyOtpResponseModel {
+class FoodScanResponseModel {
   bool? hasErrors;
   int? statusCode;
   String? path;
@@ -7,8 +7,7 @@ class VerifyOtpResponseModel {
   int? id;
   List<ErrorModel>? errors;
 
-
-  VerifyOtpResponseModel(
+  FoodScanResponseModel(
       {this.hasErrors,
         this.statusCode,
         this.path,
@@ -17,7 +16,7 @@ class VerifyOtpResponseModel {
         this.id,
         this.errors});
 
-  VerifyOtpResponseModel.fromJson(Map<String, dynamic> json) {
+  FoodScanResponseModel.fromJson(Map<String, dynamic> json) {
     hasErrors = json['HasErrors'];
     statusCode = json['StatusCode'];
     path = json['Path'];
@@ -51,35 +50,55 @@ class VerifyOtpResponseModel {
 }
 
 class Result {
-  bool? success;
-  bool? isRegistered;
-  String? accessToken;
-  String? refreshToken;
-  String? tempToken;
+  String? foodName;
+  int? confidence;
+  Nutrition? nutrition;
 
-  Result(
-      {this.success, this.isRegistered, this.accessToken, this.refreshToken, this.tempToken});
+  Result({this.foodName, this.confidence, this.nutrition});
 
   Result.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    isRegistered = json['isRegistered'];
-    accessToken = json['accessToken'];
-    refreshToken = json['refreshToken'];
-    tempToken = json['tempToken'];
+    foodName = json['food_name'];
+    confidence = json['confidence'];
+    nutrition = json['nutrition'] != null
+        ? new Nutrition.fromJson(json['nutrition'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['isRegistered'] = this.isRegistered;
-    data['accessToken'] = this.accessToken;
-    data['refreshToken'] = this.refreshToken;
-    data['tempToken'] = this.tempToken;
+    data['food_name'] = this.foodName;
+    data['confidence'] = this.confidence;
+    if (this.nutrition != null) {
+      data['nutrition'] = this.nutrition!.toJson();
+    }
     return data;
   }
 }
 
+class Nutrition {
+  int? calories;
+  int? protein;
+  int? carbs;
+  int? fat;
 
+  Nutrition({this.calories, this.protein, this.carbs, this.fat});
+
+  Nutrition.fromJson(Map<String, dynamic> json) {
+    calories = json['calories'];
+    protein = json['protein'];
+    carbs = json['carbs'];
+    fat = json['fat'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['calories'] = this.calories;
+    data['protein'] = this.protein;
+    data['carbs'] = this.carbs;
+    data['fat'] = this.fat;
+    return data;
+  }
+}
 
 class ErrorModel {
   String? message;

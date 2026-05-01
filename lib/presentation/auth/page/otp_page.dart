@@ -39,7 +39,7 @@ class OtpPage extends ConsumerWidget {
         final res = next.response;
 
         if (res?.result?.isRegistered == true) {
-          context.router.replace(const HomeRoute());
+          context.router.replaceAll([DashboardRoute()]);
         } else {
           context.router.push(CreateProfileRoute());
         }
