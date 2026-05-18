@@ -7,7 +7,7 @@ import 'package:calorix_app/utils/design/app_text.dart';
 class CalorieGauge extends StatelessWidget {
   final int consumed;
   final int total;
-  final int burned; // optional (can pass 0)
+  final int burned;
 
   const CalorieGauge({
     super.key,
@@ -21,8 +21,8 @@ class CalorieGauge extends StatelessWidget {
     final progress =
     total > 0 ? (consumed / total).clamp(0.0, 1.0) : 0.0;
 
-    final remaining = (total - consumed).clamp(0, total);
-    final net = consumed - burned;
+    final remaining = max(total - consumed, 0);
+    final net = max(consumed - burned, 0);
 
     final isExceeded = consumed > total;
 
@@ -32,7 +32,7 @@ class CalorieGauge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppColors.secondaryColor.withOpacity(.04),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         children: [
@@ -44,52 +44,82 @@ class CalorieGauge extends StatelessWidget {
           ),
 
           SizedBox(
-            width: AppMediaQuery.width(context) * .6,
-            height: AppMediaQuery.height(context) * .15,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                CustomPaint(
-                  size: Size(
-                    AppMediaQuery.width(context) * .55,
-                    AppMediaQuery.height(context) * .15,
-                  ),
-                  painter: _ArcPainter(progress, isExceeded),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
+            width: AppMediaQuery.width(context) * .65,
+            height: AppMediaQuery.height(context) * .17,
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: progress),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutCubic,
+              builder: (context, animatedProgress, child) {
+                return Stack(
+                  alignment: Alignment.bottomCenter,
                   children: [
-                    const Text("🔥", style: TextStyle(fontSize: 28)),
+                    CustomPaint(
+                      size: Size(
+                        AppMediaQuery.width(context) * .58,
+                        AppMediaQuery.height(context) * .16,
+                      ),
+                      painter: _ArcPainter(
+                        animatedProgress,
+                        isExceeded,
+                      ),
+                    ),
 
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: AppQuicksandText.bodyLarge(context).copyWith(
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextSpan(
-                            text: "$consumed kcal\n",
-                            style: AppQuicksandText.title(context).copyWith(
-                              color: isExceeded
-                                  ? Colors.red
-                                  : AppColors.black,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          const Text(
+                            "🔥",
+                            style: TextStyle(fontSize: 30),
                           ),
-                          TextSpan(
-                            text: "of $total kcal goal",
-                            style: AppQuicksandText.body(context).copyWith(
-                              color: AppColors.gray,
+
+                          TweenAnimationBuilder<int>(
+                            tween: IntTween(
+                              begin: 0,
+                              end: consumed,
                             ),
+                            duration:
+                            const Duration(milliseconds: 900),
+                            builder: (context, value, child) {
+                              return RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  style: AppQuicksandText.bodyLarge(context)
+                                      .copyWith(
+                                    color: AppColors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: "$value kcal\n",
+                                      style: AppQuicksandText.title(context)
+                                          .copyWith(
+                                        color: isExceeded
+                                            ? Colors.red
+                                            : AppColors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "of $total kcal goal",
+                                      style: AppQuicksandText.body(context)
+                                          .copyWith(
+                                        color: AppColors.gray,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
                     ),
                   ],
-                ),
-              ],
+                );
+              },
             ),
           ),
 
@@ -98,9 +128,18 @@ class CalorieGauge extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _StatItem(label: "Burned", value: "$burned kcal"),
-              _StatItem(label: "Remaining", value: "$remaining kcal"),
-              _StatItem(label: "Net", value: "$net kcal"),
+              _StatItem(
+                label: "Burned",
+                value: "$burned kcal",
+              ),
+              _StatItem(
+                label: "Remaining",
+                value: "$remaining kcal",
+              ),
+              _StatItem(
+                label: "Net",
+                value: "$net kcal",
+              ),
             ],
           ),
         ],
@@ -122,14 +161,19 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(label,
-            style: AppQuicksandText.body(context).copyWith(
-              color: AppColors.gray,
-            )),
-        Text(value,
-            style: AppQuicksandText.bodyLarge(context).copyWith(
-              fontWeight: FontWeight.w600,
-            )),
+        Text(
+          label,
+          style: AppQuicksandText.body(context).copyWith(
+            color: AppColors.gray,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: AppQuicksandText.bodyLarge(context).copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ],
     );
   }
@@ -148,29 +192,51 @@ class _ArcPainter extends CustomPainter {
       radius: size.width / 2,
     );
 
-    final startAngle = -pi;
-    final sweepAngle = pi * progress;
+    const strokeWidth = 18.0;
 
     final bgPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.2)
+      ..color = Colors.grey.withOpacity(.15)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 18
+      ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
     final fgPaint = Paint()
       ..shader = LinearGradient(
         colors: isExceeded
-            ? [Colors.red, Colors.redAccent]
-            : [Colors.red, Colors.orange],
+            ? [
+          Colors.redAccent,
+          Colors.red,
+        ]
+            : [
+          Colors.orange,
+          Colors.deepOrange,
+        ],
       ).createShader(rect)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 18
+      ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawArc(rect, startAngle, pi, false, bgPaint);
-    canvas.drawArc(rect, startAngle, sweepAngle, false, fgPaint);
+    // background
+    canvas.drawArc(
+      rect,
+      -pi,
+      pi,
+      false,
+      bgPaint,
+    );
 
-    final angle = startAngle + sweepAngle;
+    // progress
+    canvas.drawArc(
+      rect,
+      -pi,
+      pi * progress,
+      false,
+      fgPaint,
+    );
+
+    // thumb
+    final angle = -pi + (pi * progress);
+
     final radius = size.width / 2;
 
     final dx = size.width / 2 + radius * cos(angle);
@@ -178,11 +244,23 @@ class _ArcPainter extends CustomPainter {
 
     canvas.drawCircle(
       Offset(dx, dy),
-      8,
+      9,
       Paint()..color = Colors.white,
+    );
+
+    canvas.drawCircle(
+      Offset(dx, dy),
+      5,
+      Paint()
+        ..color = isExceeded
+            ? Colors.red
+            : Colors.deepOrange,
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _ArcPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+        oldDelegate.isExceeded != isExceeded;
+  }
 }

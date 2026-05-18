@@ -8,6 +8,8 @@ import 'package:calorix_app/utils/design/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../config/di/injector.dart';
+import '../../../domain/repositories/token_storage.dart';
 import '../../../utils/services/common_functions.dart';
 import '../provider/get_agenda_provider.dart';
 import '../provider/get_agenda_state.dart';
@@ -16,7 +18,9 @@ import '../widget/macronutrient_widget.dart';
 
 @RoutePage()
 class HomePage extends ConsumerWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  final tokenStorage = getIt<TokenStorage>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,8 +33,10 @@ class HomePage extends ConsumerWidget {
     }
 
     final data = agendaState.data;
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Container(
           margin: EdgeInsets.only(left: AppMediaQuery.width(context)*.03),
@@ -50,9 +56,19 @@ class HomePage extends ConsumerWidget {
                     getGreeting(),
                     style: AppQuicksandText.bodyLarge(context).copyWith(color: AppColors.gray, fontWeight: FontWeight.w500)
                   ),
-                  Text(
-                    "John Doe",
-                      style: AppQuicksandText.title(context).copyWith(color: AppColors.black, fontWeight: FontWeight.w600)
+                  FutureBuilder<String?>(
+                    future: tokenStorage.getName(),
+                    builder: (context, snapshot) {
+
+                      return Text(
+                        snapshot.data ?? "User",
+                        style: AppQuicksandText.title(context)
+                            .copyWith(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -86,19 +102,19 @@ class HomePage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MacroProgressItem(
-                  title: "Protein",
+                  type: MacroType.protein,
                   grams: data?.proteinConsumed ?? 0,
-                  totalCalories: data?.proteinTarget ?? 1,
+                  targetGrams: data?.proteinTarget ?? 0,
                 ),
                 MacroProgressItem(
-                  title: "Carbs",
+                  type: MacroType.carbs,
                   grams: data?.carbsConsumed ?? 0,
-                  totalCalories: data?.carbsTarget ?? 1,
+                  targetGrams: data?.carbsTarget ?? 0,
                 ),
                 MacroProgressItem(
-                  title: "Fat",
+                  type: MacroType.fat,
                   grams: data?.fatConsumed ?? 0,
-                  totalCalories: data?.fatTarget ?? 1,
+                  targetGrams: data?.fatTarget ?? 0,
                 ),
               ],
             ),

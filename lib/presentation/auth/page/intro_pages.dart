@@ -33,6 +33,7 @@ class IntroPages extends ConsumerWidget {
         notifier.state++;
       } else {
         final storage = getIt<TokenStorage>();
+        await storage.clear();
         await storage.setIntroSeen();
         context.router.replaceAll([LoginRoute()]);
       }
@@ -53,6 +54,7 @@ class IntroPages extends ConsumerWidget {
             child: GestureDetector(
               onTap: ()async{
                 final storage = getIt<TokenStorage>();
+                await storage.clear();
                 await storage.setIntroSeen();
                 context.router.replaceAll([LoginRoute()]);},
               child: Text(

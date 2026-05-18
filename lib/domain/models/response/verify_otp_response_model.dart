@@ -56,9 +56,10 @@ class Result {
   String? accessToken;
   String? refreshToken;
   String? tempToken;
+  String? name;
 
   Result(
-      {this.success, this.isRegistered, this.accessToken, this.refreshToken, this.tempToken});
+      {this.success, this.isRegistered, this.accessToken, this.refreshToken, this.tempToken, this.name});
 
   Result.fromJson(Map<String, dynamic> json) {
     success = json['success'];
@@ -66,6 +67,7 @@ class Result {
     accessToken = json['accessToken'];
     refreshToken = json['refreshToken'];
     tempToken = json['tempToken'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +77,7 @@ class Result {
     data['accessToken'] = this.accessToken;
     data['refreshToken'] = this.refreshToken;
     data['tempToken'] = this.tempToken;
+    data['name'] = this.name;
     return data;
   }
 }

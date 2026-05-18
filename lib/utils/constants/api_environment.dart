@@ -1,5 +1,5 @@
 class ApiEnvironment{
-  static const baseUrl = 'http://localhost:5000/';
+  static const baseUrl = 'http://localhost:8000/';
   static const apiPrefix = 'api/';
 
   // End Points
@@ -8,4 +8,7 @@ class ApiEnvironment{
   static const completeProfile = 'user/complete-profile';
   static const getAgenda = 'meals/daily-agenda';
   static const foodScan = 'food/scan';
+  static const logMeal = 'meals/log';
+  static const refreshToken = 'auth/refresh-token';
+  static const logout = 'auth/logout';
 }

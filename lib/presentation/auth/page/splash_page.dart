@@ -11,33 +11,82 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   _init(context);
-
+    _init(context);
     return Scaffold(
       body: AppPadding(
         child: const SafeArea(
           child: Center(
-            child: Text('Calorix'),
+            child: Text(
+              'Calorix',
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> _init(BuildContext context) async {
-    final storage = getIt<TokenStorage>();
+  Future<void> _init(
+      BuildContext context,
+      ) async {
 
-    await Future.delayed(const Duration(seconds: 2));
+    final storage =
+    getIt<TokenStorage>();
 
-    final isIntroSeen = await storage.isIntroSeen();
-    final accessToken = await storage.getAccessToken();
+    await Future.delayed(
+      const Duration(seconds: 2),
+    );
+
+    final isIntroSeen =
+    await storage.isIntroSeen();
+
+    final accessToken =
+    await storage
+        .getAccessToken();
+
+    final refreshToken =
+    await storage
+        .getRefreshToken();
+
+    final name =
+    await storage.getName();
+
+    debugPrint(
+      'INTRO SEEN : $isIntroSeen',
+    );
+
+    debugPrint(
+      'ACCESS TOKEN : $accessToken',
+    );
+
+    debugPrint(
+      'REFRESH TOKEN : $refreshToken',
+    );
+
+    debugPrint(
+      'NAME : $name',
+    );
+
     if (!context.mounted) return;
+
     if (!isIntroSeen) {
-      context.router.replaceAll([IntroRoutes()]);
-    } else if (accessToken != null && accessToken.isNotEmpty) {
-      context.router.replaceAll([const DashboardRoute()]);
+
+      context.router.replaceAll([
+        IntroRoutes(),
+      ]);
+
+    } else if (
+    accessToken != null &&
+        accessToken.isNotEmpty) {
+
+      context.router.replaceAll([
+        const DashboardRoute(),
+      ]);
+
     } else {
-      context.router.replaceAll([LoginRoute()]);
+
+      context.router.replaceAll([
+        LoginRoute(),
+      ]);
     }
   }
 }

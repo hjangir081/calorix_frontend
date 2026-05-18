@@ -12,4 +12,5 @@ abstract class AppPaths {
   static const String homePage = '/home_page';
   static const String scanFoodPage = '/scan_food_page';
   static const String foodNutrientsPage = '/food_nutrients_page';
+  static const String profilePage = '/profile_page';
 }

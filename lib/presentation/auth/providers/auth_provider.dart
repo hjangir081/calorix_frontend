@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:calorix_app/domain/models/request/logout_request_model.dart';
 import 'package:calorix_app/utils/constants/countries.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -113,6 +114,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
             res.result!.refreshToken!,
           );
         }
+        if(res?.result?.name != null) {
+          await tokenStorage.saveName(res!.result!.name!);
+        }
         state = state.copyWith(
           status: AuthStatus.success,
           response: result.data,
@@ -143,6 +147,72 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+
+// ─── Logout User API ──────────────────────────────────
+  Future<void> logout() async {
+
+    state = state.copyWith(
+      status: AuthStatus.loading,
+    );
+
+    try {
+
+      final tokenStorage =
+      getIt<TokenStorage>();
+
+      final token =
+      await tokenStorage
+          .getAccessToken();
+
+      final repo =
+      getIt<ApiRepository>();
+
+      final result =
+      await repo.logout(
+        token: 'Bearer $token',
+        logoutRequestModel: LogoutRequestModel(
+          deviceType: Platform.isAndroid
+              ? "android"
+              : Platform.isIOS
+              ? "ios"
+              : "web",
+        )
+      );
+
+      if (result is DataSuccess) {
+
+        await tokenStorage.clear();
+
+        state = state.copyWith(
+          status: AuthStatus.initial,
+          response: null,
+          errorMessage: null,
+          otpText: '',
+          phoneText: '',
+          tempToken: null,
+        );
+
+      } else if (
+      result is DataFailed) {
+
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage:
+          result.exception
+              ?.response
+              ?.data['Errors']?[0]
+          ?['Message'],
+        );
+      }
+
+    } catch (e) {
+
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: e.toString(),
+      );
+    }
+  }
 
   // ─── Reset ───────────────────────────────────────────
   void reset() {

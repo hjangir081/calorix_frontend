@@ -8,6 +8,7 @@ import '../../data/datasource/remote/api_service.dart';
 import '../../data/repositories/api_repository_impl.dart';
 import '../../domain/repositories/api_repository.dart';
 import '../../domain/repositories/token_storage.dart';
+import '../network/auth_interceptor.dart';
 import '../router/app_router.dart';
 
 final getIt = GetIt.instance;
@@ -15,17 +16,6 @@ final getIt = GetIt.instance;
 Future<void> initializeApp() async {
   final dio = Dio();
   final appRouter = AppRouter();
-
-  dio.interceptors.add(
-    PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      compact: false,
-      maxWidth: 120,
-    ),
-  );
 
   getIt.registerSingleton<Dio>(dio);
 
@@ -35,6 +25,21 @@ Future<void> initializeApp() async {
 
   getIt.registerLazySingleton<TokenStorage>(
     () => TokenStorageImpl(getIt<FlutterSecureStorage>()),
+  );
+
+  dio.interceptors.add(
+    PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: false,
+      responseBody: true,
+      compact: false,
+      maxWidth: 120,
+    ),
+  );
+
+  dio.interceptors.add(
+    AuthInterceptor(dio: dio, tokenStorage: getIt<TokenStorage>()),
   );
 
   getIt.registerSingleton<ApiService>(ApiService(getIt<Dio>()));

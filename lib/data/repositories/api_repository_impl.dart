@@ -1,9 +1,13 @@
 import 'package:calorix_app/domain/models/request/complete_profile_request_model.dart';
+import 'package:calorix_app/domain/models/request/log_food_request_model.dart';
+import 'package:calorix_app/domain/models/request/logout_request_model.dart';
 import 'package:calorix_app/domain/models/request/send_otp_request_model.dart';
 import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart';
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
+import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
+import 'package:calorix_app/domain/models/response/logout_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
 import 'package:calorix_app/domain/models/response/verify_otp_response_model.dart';
 import 'package:dio/dio.dart';
@@ -50,22 +54,53 @@ class ApiRepositoryImpl extends BaseApiRepository implements ApiRepository {
   }
 
   @override
-  Future<DataState<FoodScanResponseModel>> foodScan({
+  Future<DataState<FoodScanResponseModel>>
+  foodScan({
     required String token,
     required String image,
   }) {
-    return getStateOf<FoodScanResponseModel>(
+
+    return getStateOf<
+        FoodScanResponseModel>(
       request: () async {
-        final file = await MultipartFile.fromFile(
+
+        final file =
+        await MultipartFile
+            .fromFile(
           image,
-          filename: image.split('/').last,
+          filename:
+          image.split('/').last,
         );
+
+        final formData =
+        FormData.fromMap({
+          'image': file,
+        });
 
         return _apiService.foodScan(
           token: token,
-          image: file,
+          formData: formData,
+          extras: {
+            'imagePath': image,
+          },
         );
       },
+    );
+  }
+
+  @override
+  Future<DataState<LogFoodResponseModel>> logMeal({required LogFoodRequestModel logFoodRequestModel, required String token}) {
+    // TODO: implement signIn
+    return getStateOf<LogFoodResponseModel>(
+      request: () => _apiService.logMeal(logFoodRequestModel: logFoodRequestModel,token: token),
+    );
+  }
+
+  @override
+  Future<DataState<LogoutResponseModel>> logout({required LogoutRequestModel logoutRequestModel, required String token}) {
+    // TODO: implement signIn
+    return getStateOf<LogoutResponseModel>(
+      request: () => _apiService.logout(logoutRequestModel: logoutRequestModel,token: token),
     );
   }
 }

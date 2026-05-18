@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:calorix_app/config/router/app_router.gr.dart';
 import 'package:calorix_app/presentation/home/page/home_page.dart';
+import 'package:calorix_app/presentation/profile/page/profile_page.dart';
 import 'package:calorix_app/utils/design/app_colors.dart';
 import 'package:calorix_app/utils/design/app_media_query.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +15,12 @@ class DashboardPage extends StatelessWidget {
 
   static final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
 
-  static final List<Widget> _pages = const [
+  static final List<Widget> _pages = [
     HomePage(),
     HomePage(),
-    SizedBox.shrink(),
+    const SizedBox.shrink(),
     HomePage(),
-    HomePage(),
+    ProfilePage()
   ];
 
   @override

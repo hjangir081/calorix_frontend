@@ -1,4 +1,4 @@
-class FoodScanResponseModel {
+class LogoutResponseModel {
   bool? hasErrors;
   int? statusCode;
   String? path;
@@ -7,7 +7,7 @@ class FoodScanResponseModel {
   int? id;
   List<ErrorModel>? errors;
 
-  FoodScanResponseModel(
+  LogoutResponseModel(
       {this.hasErrors,
         this.statusCode,
         this.path,
@@ -16,7 +16,7 @@ class FoodScanResponseModel {
         this.id,
         this.errors});
 
-  FoodScanResponseModel.fromJson(Map<String, dynamic> json) {
+  LogoutResponseModel.fromJson(Map<String, dynamic> json) {
     hasErrors = json['HasErrors'];
     statusCode = json['StatusCode'];
     path = json['Path'];
@@ -50,60 +50,23 @@ class FoodScanResponseModel {
 }
 
 class Result {
-  String? foodName;
-  int? confidence;
-  Nutrition? nutrition;
-  String? imageUrl;
+  bool? success;
+  String? message;
 
-  Result({this.foodName, this.confidence, this.nutrition, this.imageUrl});
+  Result({this.success, this.message});
 
   Result.fromJson(Map<String, dynamic> json) {
-    foodName = json['food_name'];
-    confidence = json['confidence'];
-    nutrition = json['nutrition'] != null
-        ? new Nutrition.fromJson(json['nutrition'])
-        : null;
-    imageUrl = json['image_url'];
+    success = json['success'];
+    message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['food_name'] = this.foodName;
-    data['confidence'] = this.confidence;
-    if (this.nutrition != null) {
-      data['nutrition'] = this.nutrition!.toJson();
-    }
-    data['image_url'] = this.imageUrl;
+    data['success'] = this.success;
+    data['message'] = this.message;
     return data;
   }
 }
-
-class Nutrition {
-  int? calories;
-  int? protein;
-  int? carbs;
-  int? fat;
-
-  Nutrition({this.calories, this.protein, this.carbs, this.fat});
-
-  Nutrition.fromJson(Map<String, dynamic> json) {
-    calories = json['calories'];
-    protein = json['protein'];
-    carbs = json['carbs'];
-    fat = json['fat'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['calories'] = this.calories;
-    data['protein'] = this.protein;
-    data['carbs'] = this.carbs;
-    data['fat'] = this.fat;
-    return data;
-  }
-}
-
-
 class ErrorModel {
   String? message;
   dynamic data;

@@ -35,7 +35,9 @@ class OtpPage extends ConsumerWidget {
     ref.listen(authProvider, (prev, next) {
       if (next.status == AuthStatus.success &&
           prev?.status != AuthStatus.success) {
-
+        notifier.updateOtp('');
+        notifier.updatePhone('');
+        otpNotifier.clear();
         final res = next.response;
 
         if (res?.result?.isRegistered == true) {
