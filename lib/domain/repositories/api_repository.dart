@@ -6,6 +6,7 @@ import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart'
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_history_response_model.dart';
 import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
 import 'package:calorix_app/domain/models/response/logout_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
@@ -21,4 +22,5 @@ abstract class ApiRepository{
   Future<DataState<FoodScanResponseModel>> foodScan({required String token, required String image});
   Future<DataState<LogFoodResponseModel>> logMeal({required LogFoodRequestModel logFoodRequestModel, required String token});
   Future<DataState<LogoutResponseModel>> logout({required LogoutRequestModel logoutRequestModel, required String token});
+  Future<DataState<GetHistoryResponseModel>> getHistory({required String token, required String date});
 }

@@ -82,5 +82,11 @@ class AppRouter extends RootStackRouter {
       transitionsBuilder: TransitionsBuilders.fadeIn,
       duration: Duration(milliseconds: 200),
     ),
+    CustomRoute(
+      page: HistoryRoute.page,
+      path: AppPaths.historyPage,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+      duration: Duration(milliseconds: 200),
+    ),
   ];
 }

@@ -11,6 +11,7 @@ abstract class  AppImages{
   static const String home = 'assets/images/home.png';
   static const String capture = 'assets/images/capture.png';
   static const String barChart = 'assets/images/bar_chart.png';
+  static const String history = 'assets/images/history.png';
 }
 
 abstract class  AppAnimations{

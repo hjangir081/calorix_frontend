@@ -1,3 +1,5 @@
+import '../../../domain/models/response/get_agenda_response_model.dart';
+
 enum AgendaStatus { initial, loading, success, error }
 
 class AgendaModel {
@@ -29,7 +31,7 @@ class AgendaModel {
 
 class AgendaState {
   final AgendaStatus status;
-  final AgendaModel? data;
+  final Result? data;
   final String? errorMessage;
 
   const AgendaState({
@@ -40,7 +42,7 @@ class AgendaState {
 
   AgendaState copyWith({
     AgendaStatus? status,
-    AgendaModel? data,
+    Result? data,
     String? errorMessage,
   }) {
     return AgendaState(

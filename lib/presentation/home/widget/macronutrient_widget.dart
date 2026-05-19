@@ -1,9 +1,7 @@
 import 'package:calorix_app/presentation/auth/widgets/app_gaps.dart';
+import 'package:calorix_app/utils/design/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:calorix_app/utils/design/app_media_query.dart';
-
-
-import 'package:flutter/material.dart';
 
 enum MacroType {
   protein,
@@ -42,18 +40,18 @@ extension MacroTypeX on MacroType {
 
 
 class MacroProgressItem extends StatelessWidget {
-
   final MacroType type;
-
   final int grams;
-
   final int targetGrams;
-
+  final bool isOverTarget;
+  final String overTargetValue;
   const MacroProgressItem({
     super.key,
     required this.type,
     required this.grams,
     required this.targetGrams,
+    this.isOverTarget = false,
+    this.overTargetValue = "",
   });
 
   @override
@@ -86,27 +84,39 @@ class MacroProgressItem extends StatelessWidget {
         CrossAxisAlignment.start,
 
         children: [
-
-          Text(
-            type.label,
-
-            style: TextStyle(
-              fontSize:
-              AppMediaQuery.width(context) *
-                  .035,
-
-              fontWeight:
-              FontWeight.w600,
-
-              color: type.color,
+          Container(
+            width: AppMediaQuery.width(context)*.21,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  type.label,
+                  style: TextStyle(
+                    fontSize: AppMediaQuery.width(context) * .035,
+                    fontWeight: FontWeight.w600,
+                    color: type.color,
+                  ),
+                ),
+                isOverTarget ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.north_east_outlined,
+                      size: 12,
+                      color: Colors.red,
+                    ),
+                    Text(
+                      overTargetValue,
+                      style: AppQuicksandText.body(context).copyWith(color: Colors.red, fontWeight: FontWeight.bold)
+                    ),
+                  ],
+                ): const SizedBox.shrink(),
+              ],
             ),
           ),
-
           AppGaps.h4(context),
-
           Text(
             "$grams g / $targetGrams g",
-
             style: TextStyle(
               fontSize:
               AppMediaQuery.width(context) *
@@ -118,35 +128,21 @@ class MacroProgressItem extends StatelessWidget {
               color: Colors.black87,
             ),
           ),
-
           AppGaps.h8(context),
-
           SizedBox(
             width:
-            AppMediaQuery.width(context) *
-                .2,
-
+            AppMediaQuery.width(context) * .2,
             child: ClipRRect(
               borderRadius:
               BorderRadius.circular(8),
-
               child: LinearProgressIndicator(
                 value:
                 progress.clamp(0, 1),
-
                 minHeight:
-                AppMediaQuery.height(
-                  context,
-                ) *
-                    .003,
-
+                AppMediaQuery.height(context,) * .003,
                 backgroundColor:
-                Colors.grey.withOpacity(
-                  0.2,
-                ),
-
-                valueColor:
-                AlwaysStoppedAnimation(
+                Colors.grey.withOpacity(0.2),
+                valueColor: AlwaysStoppedAnimation(
                   type.color,
                 ),
               ),

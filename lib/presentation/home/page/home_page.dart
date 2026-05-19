@@ -94,27 +94,33 @@ class HomePage extends ConsumerWidget {
           children: [
             AppGaps.h(context, 22),
             CalorieGauge(
-              consumed: data?.caloriesConsumed ?? 0,
-              total: data?.caloriesTarget ?? 1,
+              consumed: data?.consumed?.calories ?? 0,
+              total: data?.target?.calories ?? 1,
             ),
             AppGaps.h(context, 22),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MacroProgressItem(
+                  isOverTarget: data?.overLimits?.protein?.isOverLimit ?? false,
                   type: MacroType.protein,
-                  grams: data?.proteinConsumed ?? 0,
-                  targetGrams: data?.proteinTarget ?? 0,
+                  overTargetValue: data?.overLimits?.protein?.overLimitAmount.toString() ?? '',
+                  grams: data?.consumed?.protein ?? 0,
+                  targetGrams: data?.target?.protein ?? 0,
                 ),
                 MacroProgressItem(
+                  isOverTarget: data?.overLimits?.carbs?.isOverLimit ?? false,
+                  overTargetValue: data?.overLimits?.carbs?.overLimitAmount.toString() ?? '',
                   type: MacroType.carbs,
-                  grams: data?.carbsConsumed ?? 0,
-                  targetGrams: data?.carbsTarget ?? 0,
+                  grams: data?.consumed?.carbs ?? 0,
+                  targetGrams: data?.target?.carbs ?? 0,
                 ),
                 MacroProgressItem(
+                  isOverTarget: data?.overLimits?.fat?.isOverLimit ?? false,
+                  overTargetValue: data?.overLimits?.fat  ?.overLimitAmount.toString() ?? '',
                   type: MacroType.fat,
-                  grams: data?.fatConsumed ?? 0,
-                  targetGrams: data?.fatTarget ?? 0,
+                  grams: data?.consumed?.fat ?? 0,
+                  targetGrams: data?.target?.fat ?? 0,
                 ),
               ],
             ),

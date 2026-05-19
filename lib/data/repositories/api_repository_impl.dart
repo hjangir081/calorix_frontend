@@ -6,6 +6,7 @@ import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart'
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_history_response_model.dart';
 import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
 import 'package:calorix_app/domain/models/response/logout_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
@@ -101,6 +102,14 @@ class ApiRepositoryImpl extends BaseApiRepository implements ApiRepository {
     // TODO: implement signIn
     return getStateOf<LogoutResponseModel>(
       request: () => _apiService.logout(logoutRequestModel: logoutRequestModel,token: token),
+    );
+  }
+
+  @override
+  Future<DataState<GetHistoryResponseModel>> getHistory({required String token, required String date}) {
+    // TODO: implement signIn
+    return getStateOf<GetHistoryResponseModel>(
+      request: () => _apiService.getHistory(token: token, date: date),
     );
   }
 }

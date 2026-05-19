@@ -11,4 +11,5 @@ class ApiEnvironment{
   static const logMeal = 'meals/log';
   static const refreshToken = 'auth/refresh-token';
   static const logout = 'auth/logout';
+  static const getHistory = 'meals/history';
 }

@@ -43,20 +43,7 @@ class AgendaNotifier extends StateNotifier<AgendaState> {
 
         state = state.copyWith(
           status: AgendaStatus.success,
-          data: AgendaModel(
-            caloriesTarget: target?.calories ?? 0,
-            caloriesConsumed: consumed?.calories ?? 0,
-            caloriesRemaining: remaining?.calories ?? 0,
-
-            proteinTarget: target?.protein ?? 0,
-            proteinConsumed: consumed?.protein ?? 0,
-
-            carbsTarget: target?.carbs ?? 0,
-            carbsConsumed: consumed?.carbs ?? 0,
-
-            fatTarget: target?.fat ?? 0,
-            fatConsumed: consumed?.fat ?? 0,
-          ),
+          data: res?.result,
         );
       } else if (result is DataFailed) {
         state = state.copyWith(

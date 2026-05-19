@@ -5,6 +5,7 @@ import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart'
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_history_response_model.dart';
 import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
 import 'package:calorix_app/domain/models/response/logout_response_model.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
@@ -62,5 +63,11 @@ abstract class ApiService {
   Future<HttpResponse<LogoutResponseModel>> logout({
     @Header('Authorization') String? token,
     @Body() required LogoutRequestModel logoutRequestModel,
+  });
+
+  @GET(ApiEnvironment.getHistory)
+  Future<HttpResponse<GetHistoryResponseModel>> getHistory({
+    @Header('Authorization') String? token,
+    @Query('date') required String date,
   });
 }

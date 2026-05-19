@@ -53,8 +53,9 @@ class Result {
   Target? target;
   Target? consumed;
   Target? remaining;
+  OverLimits? overLimits;
 
-  Result({this.target, this.consumed, this.remaining});
+  Result({this.target, this.consumed, this.remaining, this.overLimits});
 
   Result.fromJson(Map<String, dynamic> json) {
     target =
@@ -63,6 +64,9 @@ class Result {
     json['consumed'] != null ? new Target.fromJson(json['consumed']) : null;
     remaining = json['remaining'] != null
         ? new Target.fromJson(json['remaining'])
+        : null;
+    overLimits = json['overLimits'] != null
+        ? new OverLimits.fromJson(json['overLimits'])
         : null;
   }
 
@@ -76,6 +80,9 @@ class Result {
     }
     if (this.remaining != null) {
       data['remaining'] = this.remaining!.toJson();
+    }
+    if (this.overLimits != null) {
+      data['overLimits'] = this.overLimits!.toJson();
     }
     return data;
   }
@@ -105,6 +112,62 @@ class Target {
     return data;
   }
 }
+
+class OverLimits {
+  Calories? calories;
+  Calories? protein;
+  Calories? carbs;
+  Calories? fat;
+
+  OverLimits({this.calories, this.protein, this.carbs, this.fat});
+
+  OverLimits.fromJson(Map<String, dynamic> json) {
+    calories = json['calories'] != null
+        ? new Calories.fromJson(json['calories'])
+        : null;
+    protein =
+    json['protein'] != null ? new Calories.fromJson(json['protein']) : null;
+    carbs = json['carbs'] != null ? new Calories.fromJson(json['carbs']) : null;
+    fat = json['fat'] != null ? new Calories.fromJson(json['fat']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.calories != null) {
+      data['calories'] = this.calories!.toJson();
+    }
+    if (this.protein != null) {
+      data['protein'] = this.protein!.toJson();
+    }
+    if (this.carbs != null) {
+      data['carbs'] = this.carbs!.toJson();
+    }
+    if (this.fat != null) {
+      data['fat'] = this.fat!.toJson();
+    }
+    return data;
+  }
+}
+
+class Calories {
+  bool? isOverLimit;
+  int? overLimitAmount;
+
+  Calories({this.isOverLimit, this.overLimitAmount});
+
+  Calories.fromJson(Map<String, dynamic> json) {
+    isOverLimit = json['isOverLimit'];
+    overLimitAmount = json['overLimitAmount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isOverLimit'] = this.isOverLimit;
+    data['overLimitAmount'] = this.overLimitAmount;
+    return data;
+  }
+}
+
 
 class ErrorModel {
   String? message;
