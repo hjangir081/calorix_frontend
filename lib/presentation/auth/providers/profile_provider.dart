@@ -9,6 +9,7 @@ import '../../../data/core/data_state.dart';
 import '../../../domain/models/request/complete_profile_request_model.dart';
 import '../../../domain/repositories/api_repository.dart';
 import '../../../domain/repositories/token_storage.dart';
+import '../../../utils/services/common_functions.dart';
 import '../../../utils/validators/app_validators.dart';
 import 'auth_provider.dart';
 
@@ -59,6 +60,15 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     state = state.copyWith(weight: value, weightError: null);
   }
 
+  void updateDietType(
+      String value,
+      ) {
+
+    state = state.copyWith(
+      dietType: value,
+      dietTypeError: null,
+    );
+  }
 
   void clearFirstNameError() {
     state = state.copyWith(firstNameError: null);
@@ -90,6 +100,68 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
   void clearGoalError() {
     state = state.copyWith(goalError: null);
+  }
+
+  void toggleCuisine(
+      String value,
+      ) {
+
+    final cuisines =
+    List<String>.from(
+      state.cuisines,
+    );
+
+    if (
+    cuisines.contains(value)
+    ) {
+
+      cuisines.remove(value);
+
+    } else {
+
+      cuisines.add(value);
+    }
+
+    state = state.copyWith(
+      cuisines: cuisines,
+      cuisinesError: null,
+    );
+  }
+
+  bool validateMealPreferencePage() {
+
+    state = state.copyWith(
+      dietTypeError: null,
+      cuisinesError: null,
+    );
+
+    bool valid = true;
+
+    if (
+    state.dietType == null
+    ) {
+
+      state = state.copyWith(
+        dietTypeError:
+        "Diet type is required",
+      );
+
+      valid = false;
+    }
+
+    if (
+    state.cuisines.isEmpty
+    ) {
+
+      state = state.copyWith(
+        cuisinesError:
+        "Select at least one cuisine",
+      );
+
+      valid = false;
+    }
+
+    return valid;
   }
 
 
@@ -193,6 +265,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
 
       final authState = _ref.read(authProvider);
       final tempToken = authState.tempToken;
+      final fcmToken = authState.fcmToken;
 
       final result = await repo.completeProfile(
         tempToken: 'Bearer $tempToken',
@@ -204,28 +277,30 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
           gender: state.gender!,
           weight: int.parse(state.weight!),
           height: int.parse(state.height!),
-          goal: state.goal!,
+          goal: mapGoalToApiValue(
+            state.goal!,
+          ),
           deviceType: getDeviceType(),
-          fcmToken: "abc123",
+          fcmToken: fcmToken,
+          preferences: Preferences(
+            dietType: state.dietType,
+            cuisines: state.cuisines,
+          ),
         ),
       );
 
       if (result is DataSuccess) {
         final res = result.data;
-
-        // 🔐 SAVE TOKENS (VERY IMPORTANT)
         final accessToken = res?.result?.accessToken;
         final refreshToken = res?.result?.refreshToken;
-
         final storage = getIt<TokenStorage>();
 
         await storage.saveTokens(accessToken ?? '', refreshToken ?? '');
-
-        // ❌ remove tempToken
         _ref.read(authProvider.notifier).reset();
-
+        if(res?.result?.user?.name != null) {
+          await storage.saveName(res!.result!.user!.name!);
+        }
         state = state.copyWith(status: ProfileStatus.success);
-
       } else if (result is DataFailed) {
         state = state.copyWith(
           status: ProfileStatus.error,
@@ -234,7 +309,6 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
               ?.data['Errors']?[0]?['Message'],
         );
       }
-
     } catch (e) {
       state = state.copyWith(
         status: ProfileStatus.error,

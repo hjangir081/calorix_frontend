@@ -50,14 +50,17 @@ class GetAgendaResponseModel {
 }
 
 class Result {
+  String? goal;
   Target? target;
   Target? consumed;
   Target? remaining;
   OverLimits? overLimits;
 
-  Result({this.target, this.consumed, this.remaining, this.overLimits});
+  Result(
+      {this.goal, this.target, this.consumed, this.remaining, this.overLimits});
 
   Result.fromJson(Map<String, dynamic> json) {
+    goal = json['goal'];
     target =
     json['target'] != null ? new Target.fromJson(json['target']) : null;
     consumed =
@@ -72,6 +75,7 @@ class Result {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['goal'] = this.goal;
     if (this.target != null) {
       data['target'] = this.target!.toJson();
     }

@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:calorix_app/utils/constants/app_images.dart';
 import 'package:calorix_app/utils/constants/app_strings.dart';
+import 'package:calorix_app/utils/design/app_colors.dart';
 import 'package:calorix_app/utils/design/app_text.dart';
 import 'package:calorix_app/utils/services/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../../../config/router/app_router.gr.dart';
 import '../../../utils/design/app_media_query.dart';
 import '../../../utils/design/app_responsive.dart';
 import '../../../utils/services/app_loader.dart';
+import '../../../utils/services/notification_service.dart';
 import '../../../utils/validators/app_validators.dart';
 import '../../provider/phone_provider.dart';
 import '../../widgets/sliding_btn.dart';
@@ -30,6 +32,7 @@ class LoginPage extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final selectedCountry = ref.watch(phoneProvider);
     final notifier = ref.read(authProvider.notifier);
+    final permissionAsked = ref.watch(notificationPermissionProvider);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -52,6 +55,22 @@ class LoginPage extends ConsumerWidget {
         notifier.reset();
       }
     });
+    if (!permissionAsked) {
+
+      Future.microtask(() async {
+
+        ref
+            .read(
+          notificationPermissionProvider
+              .notifier,
+        )
+            .state = true;
+
+        await ref
+            .read(authProvider.notifier)
+            .initializeFcm();
+      });
+    }
     return LoaderOverlay(
       isLoading: authState.status == AuthStatus.loading,
       child: Scaffold(
@@ -109,7 +128,7 @@ class LoginPage extends ConsumerWidget {
                   maxHeight: AppResponsive.bottomSheetLarge(context),
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.background,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(24),
                   ),

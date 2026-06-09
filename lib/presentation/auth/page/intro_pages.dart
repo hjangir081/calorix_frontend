@@ -61,7 +61,7 @@ class IntroPages extends ConsumerWidget {
                 AppBtnStrings.skip,
                 style: AppQuicksandText.title(
                   context,
-                ).copyWith(fontWeight: FontWeight.bold, color: AppColors.gray),
+                ).copyWith(fontWeight: FontWeight.bold, color: AppColors.textSecondary),
               ),
             )
           ),
@@ -102,7 +102,7 @@ class IntroPages extends ConsumerWidget {
                 data.subtitle,
                 textAlign: TextAlign.center,
                 style: AppQuicksandText.body(context).copyWith(
-                  color: AppColors.gray,
+                  color: AppColors.textSecondary,
                 ),
               ),
             ],

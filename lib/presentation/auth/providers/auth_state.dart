@@ -10,6 +10,7 @@ class AuthState {
   final String? errorMessage;
   final dynamic response;
   final String? tempToken;
+  final String? fcmToken;
 
   const AuthState({
     this.phoneText = '',
@@ -19,6 +20,7 @@ class AuthState {
     this.errorMessage,
     this.response,
     this.tempToken,
+    this.fcmToken,
   });
 
   AuthState copyWith({
@@ -29,6 +31,7 @@ class AuthState {
     String? errorMessage,
     dynamic response,
     String? tempToken,
+    String? fcmToken,
   }) {
     return AuthState(
       phoneText: phoneText ?? this.phoneText,
@@ -38,6 +41,7 @@ class AuthState {
       errorMessage: errorMessage,
       response: response ?? this.response,
       tempToken: tempToken ?? this.tempToken,
+      fcmToken: fcmToken ?? this.fcmToken,
     );
   }
 }

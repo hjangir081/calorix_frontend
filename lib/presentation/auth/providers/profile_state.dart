@@ -27,7 +27,10 @@ class ProfileState {
   final String? heightError;
   final String? weightError;
   final String? goalError;
-
+  final String? dietType;
+  final List<String> cuisines;
+  final String? dietTypeError;
+  final String? cuisinesError;
 
   const ProfileState({
     this.status = ProfileStatus.initial,
@@ -39,6 +42,10 @@ class ProfileState {
     this.email = '',
     this.age = '',
     this.imagePath,
+    this.dietType,
+    this.cuisines = const [],
+    this.dietTypeError,
+    this.cuisinesError,
     this.errorMessage, this.firstNameError, this.lastNameError, this.emailError, this.dobError, this.genderError, this.weight, this.height, this.heightError, this.weightError, this.goalError
   });
 
@@ -63,6 +70,10 @@ class ProfileState {
     String? heightError,
     String? weightError,
     String? goalError,
+    String? dietType,
+    List<String>? cuisines,
+    String? dietTypeError,
+    String? cuisinesError,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -85,6 +96,10 @@ class ProfileState {
       heightError: heightError ?? this.heightError,
       weightError: weightError ?? this.weightError,
       goalError: goalError ?? this.goalError,
+      dietType: dietType ?? this.dietType,
+      cuisines: cuisines ?? this.cuisines,
+      dietTypeError: dietTypeError ?? this.dietTypeError,
+      cuisinesError: cuisinesError ?? this.cuisinesError,
     );
   }
 }

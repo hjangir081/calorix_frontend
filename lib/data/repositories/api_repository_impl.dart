@@ -2,14 +2,20 @@ import 'package:calorix_app/domain/models/request/complete_profile_request_model
 import 'package:calorix_app/domain/models/request/log_food_request_model.dart';
 import 'package:calorix_app/domain/models/request/logout_request_model.dart';
 import 'package:calorix_app/domain/models/request/send_otp_request_model.dart';
+import 'package:calorix_app/domain/models/request/update_goal_request_model.dart';
 import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart';
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_history_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_notification_response_model.dart';
+import 'package:calorix_app/domain/models/response/leaderboard_progress_response_model.dart';
 import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
 import 'package:calorix_app/domain/models/response/logout_response_model.dart';
+import 'package:calorix_app/domain/models/response/meals_preference_options_response.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
+import 'package:calorix_app/domain/models/response/suggest_meal_response_model.dart';
+import 'package:calorix_app/domain/models/response/update_goal_response_model.dart';
 import 'package:calorix_app/domain/models/response/verify_otp_response_model.dart';
 import 'package:dio/dio.dart';
 
@@ -110,6 +116,46 @@ class ApiRepositoryImpl extends BaseApiRepository implements ApiRepository {
     // TODO: implement signIn
     return getStateOf<GetHistoryResponseModel>(
       request: () => _apiService.getHistory(token: token, date: date),
+    );
+  }
+
+  @override
+  Future<DataState<LeaderboardProgressResponseModel>> leaderboardProgress({required String token, required String days}) {
+    // TODO: implement signIn
+    return getStateOf<LeaderboardProgressResponseModel>(
+      request: () => _apiService.leaderboardProgress(token: token, days: days),
+    );
+  }
+
+  @override
+  Future<DataState<GetNotificationResponseModel>> getNotification({required String token, required String limit, required String cursor}) {
+    // TODO: implement signIn
+    return getStateOf<GetNotificationResponseModel>(
+      request: () => _apiService.getNotification(token: token, limit: limit, cursor: cursor),
+    );
+  }
+
+  @override
+  Future<DataState<UpdateGoalResponseModel>> updateGoal({required UpdateGoalRequestModel updateGoalRequestModel, required String token}) {
+    // TODO: implement signIn
+    return getStateOf<UpdateGoalResponseModel>(
+      request: () => _apiService.updateGoal(token: token, updateGoalRequestModel: updateGoalRequestModel),
+    );
+  }
+
+  @override
+  Future<DataState<MealPreferenceOptionsResponseModel>> mealPreferenceOptions() {
+    // TODO: implement signIn
+    return getStateOf<MealPreferenceOptionsResponseModel>(
+      request: () => _apiService.preferenceOptions(),
+    );
+  }
+
+  @override
+  Future<DataState<SuggestMealResponseModel>> suggestMeal({required String token}) {
+    // TODO: implement signIn
+    return getStateOf<SuggestMealResponseModel>(
+      request: () => _apiService.suggestedMeal(token: token),
     );
   }
 }

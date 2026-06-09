@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:calorix_app/domain/models/request/logout_request_model.dart';
 import 'package:calorix_app/utils/constants/countries.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -17,6 +18,11 @@ import 'auth_state.dart';
 final authProvider =
 StateNotifierProvider<AuthNotifier, AuthState>(
       (ref) => AuthNotifier(ref),
+);
+
+final notificationPermissionProvider =
+StateProvider<bool>(
+      (ref) => false,
 );
 
 final repo = getIt<ApiRepository>();
@@ -85,7 +91,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (otp.length < 4) return;
 
     final country = _ref.read(phoneProvider);
-
+    final fcmToken = state.fcmToken;
     state = state.copyWith(status: AuthStatus.loading);
     String getDeviceType() {
       if (Platform.isAndroid) return "android";
@@ -101,7 +107,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
           phoneNumber: state.phoneText,
           otp: otp,
           deviceType: getDeviceType(),
-          fcmToken: "abc123",    // later from Firebase
+          fcmToken: fcmToken,
         ),
       );
 
@@ -210,6 +216,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(
         status: AuthStatus.error,
         errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void>
+  initializeFcm() async {
+
+    final settings =
+    await FirebaseMessaging.instance
+        .requestPermission();
+
+    if (settings.authorizationStatus ==
+        AuthorizationStatus.authorized) {
+
+      final token =
+      await FirebaseMessaging.instance
+          .getToken();
+
+      print(
+        'FCM TOKEN ===== '
+            '$token',
+      );
+
+      state = state.copyWith(
+        fcmToken: token,
       );
     }
   }

@@ -74,7 +74,7 @@ class OtpInputField extends ConsumerWidget {
                   onKeyEvent: (event) =>
                       otpNotifier.onBackspace(index, event, onChanged),
                   child: TextField(
-                    cursorColor: AppColors.black,
+                    cursorColor: AppColors.white,
                     controller: controller,
                     focusNode: focusNode,
                     textAlign: TextAlign.center,

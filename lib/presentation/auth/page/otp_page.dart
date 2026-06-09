@@ -66,6 +66,13 @@ class OtpPage extends ConsumerWidget {
     return LoaderOverlay(
         isLoading: authState.status == AuthStatus.loading,
         child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              toolbarHeight: 0,
+              automaticallyImplyLeading: false,
+              automaticallyImplyActions: false,
+            ),
             bottomNavigationBar: SafeArea(
                 child: SingleChildScrollView(
                   child: AppPadding(
@@ -116,7 +123,7 @@ class OtpPage extends ConsumerWidget {
                       maxHeight: AppResponsive.bottomSheetLarge(context),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.background,
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(24),
                       ),
@@ -130,12 +137,12 @@ class OtpPage extends ConsumerWidget {
                             children: [
                               Text(
                                 AppStrings.verifyYourNumber,
-                                style: AppQuicksandText.display(context).copyWith(fontWeight: FontWeight.bold),
+                                style: AppQuicksandText.display(context, color: AppColors.white).copyWith(fontWeight: FontWeight.bold),
                               ),
                               AppGaps.h16(context),
                               Text(
                                 AppStrings.sentCode,
-                                style: AppQuicksandText.bodyLarge(context),
+                                style: AppQuicksandText.bodyLarge(context, color: AppColors.white),
                               ),
                               AppGaps.h16(context),
                               OtpInputField(

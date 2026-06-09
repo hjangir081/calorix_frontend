@@ -23,9 +23,10 @@ class HeightPage extends ConsumerWidget {
     final int currentHeight = int.tryParse(profileState.height ?? '') ?? 170;
 
     final controller = FixedExtentScrollController(
-      initialItem: currentHeight - 40, // range starts at 40
+      initialItem: currentHeight - 40,
     );
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: SafeArea(
         child: AppPadding(
           child: Column(
@@ -34,7 +35,7 @@ class HeightPage extends ConsumerWidget {
               AppGaps.h(context, 40),
               Text(
                 AppStrings.heightQuestion,
-                style: AppQuicksandText.title(context)
+                style: AppQuicksandText.title(context, color: AppColors.white)
                     .copyWith(fontWeight: FontWeight.bold),
               ),
               Expanded(
@@ -60,7 +61,7 @@ class HeightPage extends ConsumerWidget {
                                 style: AppQuicksandText.bodyLarge(context).copyWith(
                                   color: value == currentHeight
                                       ? AppColors.primaryColor
-                                      : AppColors.gray,
+                                      : AppColors.textSecondary,
                                   fontWeight: value == currentHeight
                                       ? FontWeight.bold
                                       : FontWeight.normal,
@@ -78,11 +79,12 @@ class HeightPage extends ConsumerWidget {
                         opacity: 0.07,
                         child:  Center(
                           child: SizedBox(
-                          width: 250,
+                          width: AppMediaQuery.width(context)*.5,
                           height: AppMediaQuery.height(context)*.4,
                           child: Image.asset(
                             AppImages.person,
                             fit: BoxFit.cover,
+                            color: AppColors.white,
                           ),
                         ),
                       )
@@ -119,7 +121,7 @@ class HeightPage extends ConsumerWidget {
                   child: Text(
                     AppBtnStrings.back,
                     style: AppQuicksandText.bodyLarge(context).copyWith(
-                      color: AppColors.gray,
+                      color: AppColors.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

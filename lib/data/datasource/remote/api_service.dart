@@ -1,14 +1,20 @@
 import 'package:calorix_app/domain/models/request/complete_profile_request_model.dart';
 import 'package:calorix_app/domain/models/request/logout_request_model.dart';
 import 'package:calorix_app/domain/models/request/send_otp_request_model.dart';
+import 'package:calorix_app/domain/models/request/update_goal_request_model.dart';
 import 'package:calorix_app/domain/models/request/verify_otp_request_model.dart';
 import 'package:calorix_app/domain/models/response/complete_profile_response_model.dart';
 import 'package:calorix_app/domain/models/response/food_scan_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_agenda_response_model.dart';
 import 'package:calorix_app/domain/models/response/get_history_response_model.dart';
+import 'package:calorix_app/domain/models/response/get_notification_response_model.dart';
+import 'package:calorix_app/domain/models/response/leaderboard_progress_response_model.dart';
 import 'package:calorix_app/domain/models/response/log_meal_response_model.dart';
 import 'package:calorix_app/domain/models/response/logout_response_model.dart';
+import 'package:calorix_app/domain/models/response/meals_preference_options_response.dart';
 import 'package:calorix_app/domain/models/response/send_otp_response_model.dart';
+import 'package:calorix_app/domain/models/response/suggest_meal_response_model.dart';
+import 'package:calorix_app/domain/models/response/update_goal_response_model.dart';
 import 'package:calorix_app/domain/models/response/verify_otp_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -69,5 +75,32 @@ abstract class ApiService {
   Future<HttpResponse<GetHistoryResponseModel>> getHistory({
     @Header('Authorization') String? token,
     @Query('date') required String date,
+  });
+
+  @GET(ApiEnvironment.leaderboardProgress)
+  Future<HttpResponse<LeaderboardProgressResponseModel>> leaderboardProgress({
+    @Header('Authorization') String? token,
+    @Query('period_days') required String days,
+  });
+
+  @GET(ApiEnvironment.getNotification)
+  Future<HttpResponse<GetNotificationResponseModel>> getNotification({
+    @Header('Authorization') String? token,
+    @Query('limit') required String limit,
+    @Query('cursor') required String cursor,
+  });
+
+  @PATCH(ApiEnvironment.updateGoal)
+  Future<HttpResponse<UpdateGoalResponseModel>> updateGoal({
+    @Header('Authorization') String? token,
+    @Body() required UpdateGoalRequestModel updateGoalRequestModel,
+  });
+
+  @GET(ApiEnvironment.preferenceOptions)
+  Future<HttpResponse<MealPreferenceOptionsResponseModel>> preferenceOptions();
+
+  @GET(ApiEnvironment.suggestMeal)
+  Future<HttpResponse<SuggestMealResponseModel>> suggestedMeal({
+    @Header('Authorization') String? token,
   });
 }

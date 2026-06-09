@@ -55,6 +55,12 @@ class CreateProfilePage extends ConsumerWidget {
     return LoaderOverlay(
         isLoading: profileState.status == ProfileStatus.loading,
         child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            toolbarHeight: 0,
+            automaticallyImplyLeading: false,
+            automaticallyImplyActions: false,
+          ),
           body: SafeArea(
             child: AppPadding(
               child: SingleChildScrollView(
@@ -69,11 +75,11 @@ class CreateProfilePage extends ConsumerWidget {
                         alignment: Alignment.bottomRight,
                         children: [
                           Container(
-                            width: 110,
-                            height: 110,
+                            width: AppMediaQuery.width(context)*.28,
+                            height: AppMediaQuery.width(context)*.28,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppColors.gray.withOpacity(0.2),
+                              color: AppColors.textSecondary.withOpacity(.20),
                               image: profileState.imagePath != null
                                   ? DecorationImage(
                                 image: FileImage(
@@ -91,7 +97,7 @@ class CreateProfilePage extends ConsumerWidget {
                             padding: const EdgeInsets.all(6),
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.black,
+                              color: AppColors.surface,
                             ),
                             child: const Icon(
                               Icons.camera_alt,
@@ -104,8 +110,8 @@ class CreateProfilePage extends ConsumerWidget {
                     ),
                     AppGaps.h24(context),
                     AppTextField(
-                      label: "First Name",
-                      hint: "Enter first name",
+                      label: AppFieldsStrings.firstNameField,
+                      hint: AppFieldsStrings.enterFirstName,
                       prefixIcon: AppImages.user,
                       errorText: profileState.firstNameError,
                       validator: (val) => AppValidators.name(val, field: "First Name"),
@@ -121,8 +127,8 @@ class CreateProfilePage extends ConsumerWidget {
                     ),
                     AppGaps.h16(context),
                     AppTextField(
-                      label: "Last Name",
-                      hint: "Enter last name",
+                      label: AppFieldsStrings.lastNameField,
+                      hint: AppFieldsStrings.enterLastName,
                       prefixIcon: AppImages.user,
                       errorText: profileState.lastNameError,
                       validator: (val) => AppValidators.name(val, field: "Last Name"),
@@ -138,8 +144,8 @@ class CreateProfilePage extends ConsumerWidget {
                     ),
                     AppGaps.h16(context),
                     AppTextField(
-                      label: "Email",
-                      hint: "Enter email",
+                      label: AppFieldsStrings.emailField,
+                      hint: AppFieldsStrings.enterEmail,
                       keyboardType: TextInputType.emailAddress,
                       errorText: profileState.emailError,
                       validator: AppValidators.email,
@@ -164,15 +170,15 @@ class CreateProfilePage extends ConsumerWidget {
                               data: Theme.of(context).copyWith(
                                 colorScheme: ColorScheme.light(
                                   primary: AppColors.primaryColor,
-                                  onPrimary: Colors.white,
-                                  onSurface: Colors.black,
+                                  onPrimary: AppColors.background,
+                                  onSurface: AppColors.background,
                                 ),
                                 textButtonTheme: TextButtonThemeData(
                                   style: TextButton.styleFrom(
-                                    foregroundColor: AppColors.primaryColor,
+                                    foregroundColor: AppColors.background,
                                   ),
                                 ),
-                                dialogBackgroundColor: Colors.white,
+                                dialogBackgroundColor: AppColors.background,
                               ),
                               child: child!,
                             );
@@ -181,15 +187,15 @@ class CreateProfilePage extends ConsumerWidget {
 
                         if (pickedDate != null) {
                           final formatted =
-                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                              "${pickedDate.year}/${pickedDate.month}/${pickedDate.day}";
                           notifier.updateDob(formatted);
                         }
                       },
                       child: AbsorbPointer(
                         child: AppTextField(
                           errorText: profileState.dobError,
-                          label: "Date of Birth",
-                          hint: "Select your date of birth",
+                          label: AppFieldsStrings.dobField,
+                          hint: AppFieldsStrings.dateOfBirth,
                           prefixIcon: AppImages.calendar,
                           controller: TextEditingController(
                             text: profileState.dob ?? '',
@@ -201,8 +207,8 @@ class CreateProfilePage extends ConsumerWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Gender",
-                        style: AppQuicksandText.bodyLarge(context)
+                        AppFieldsStrings.genderField,
+                        style: AppQuicksandText.bodyLarge(context, color: AppColors.white)
                             .copyWith(fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -275,17 +281,17 @@ Widget _buildGenderOption(BuildContext context, String label,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: isSelected ? AppColors.primaryColor : AppColors.gray,
+          color: isSelected ? AppColors.divider : AppColors.textSecondary,
           width: isSelected ? 2 : 1,
         ),
         color: isSelected
             ? AppColors.primaryColor.withOpacity(0.1)
-            : Colors.white,
+            : AppColors.card,
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: isSelected ? AppColors.primaryColor : AppColors.black,
+          color: isSelected ? AppColors.primaryColor : AppColors.white,
           fontWeight: FontWeight.w600,
         ),
       ),

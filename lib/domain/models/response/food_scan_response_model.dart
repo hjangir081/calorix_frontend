@@ -52,14 +52,24 @@ class FoodScanResponseModel {
 class Result {
   String? foodName;
   int? confidence;
+  int? quantity;
+  int? estimatedWeightG;
   Nutrition? nutrition;
   String? imageUrl;
 
-  Result({this.foodName, this.confidence, this.nutrition, this.imageUrl});
+  Result(
+      {this.foodName,
+        this.confidence,
+        this.quantity,
+        this.estimatedWeightG,
+        this.nutrition,
+        this.imageUrl});
 
   Result.fromJson(Map<String, dynamic> json) {
     foodName = json['food_name'];
     confidence = json['confidence'];
+    quantity = json['quantity'];
+    estimatedWeightG = json['estimated_weight_g'];
     nutrition = json['nutrition'] != null
         ? new Nutrition.fromJson(json['nutrition'])
         : null;
@@ -70,6 +80,8 @@ class Result {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['food_name'] = this.foodName;
     data['confidence'] = this.confidence;
+    data['quantity'] = this.quantity;
+    data['estimated_weight_g'] = this.estimatedWeightG;
     if (this.nutrition != null) {
       data['nutrition'] = this.nutrition!.toJson();
     }

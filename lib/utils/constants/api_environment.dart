@@ -12,4 +12,9 @@ class ApiEnvironment{
   static const refreshToken = 'auth/refresh-token';
   static const logout = 'auth/logout';
   static const getHistory = 'meals/history';
+  static const leaderboardProgress = 'leaderboard/progress';
+  static const getNotification = 'notifications';
+  static const updateGoal = 'user/goal';
+  static const preferenceOptions = 'user/preference-options';
+  static const suggestMeal = 'meals/suggested-meals';
 }

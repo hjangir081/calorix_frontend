@@ -57,13 +57,32 @@ class AppRouter extends RootStackRouter {
       transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
       duration: Duration(milliseconds: 200),
     ),
-    CustomRoute(
+    AutoRoute(
       page: DashboardRoute.page,
       path: AppPaths.dashboardPage,
-      transitionsBuilder: TransitionsBuilders.fadeIn,
-      duration: Duration(milliseconds: 200),
+      children: [
+        AutoRoute(
+          page: HomeRoute.page,
+          path: AppPaths.homePage,
+          initial: true,
+        ),
+
+        AutoRoute(
+          page: HistoryRoute.page,
+          path: AppPaths.historyPage,
+        ),
+
+        AutoRoute(
+          page: LeaderboardRoute.page,
+          path: AppPaths.leaderboardPage,
+        ),
+
+        AutoRoute(
+          page: ProfileRoute.page,
+          path: AppPaths.profilePage,
+        ),
+      ],
     ),
-    AutoRoute(page: HomeRoute.page, path: AppPaths.homePage),
     CustomRoute(
       page: ScanFoodRoute.page,
       path: AppPaths.scanFoodPage,
@@ -77,15 +96,27 @@ class AppRouter extends RootStackRouter {
       duration: Duration(milliseconds: 200),
     ),
     CustomRoute(
-      page: ProfileRoute.page,
-      path: AppPaths.profilePage,
+      page: NotificationRoute.page,
+      path: AppPaths.notificationPage,
       transitionsBuilder: TransitionsBuilders.fadeIn,
       duration: Duration(milliseconds: 200),
     ),
     CustomRoute(
-      page: HistoryRoute.page,
-      path: AppPaths.historyPage,
-      transitionsBuilder: TransitionsBuilders.fadeIn,
+      page: MealsPreferencesRoute.page,
+      path: AppPaths.mealsPreferencesPage,
+      transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+      duration: Duration(milliseconds: 200),
+    ),
+    CustomRoute(
+      page: SuggestedMealDetailRoute.page,
+      path: AppPaths.suggestedMealsDetailPage,
+      transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
+      duration: Duration(milliseconds: 200),
+    ),
+    CustomRoute(
+      page: MealRecipeDetailRoute.page,
+      path: AppPaths.mealRecipeDetailPage,
+      transitionsBuilder: TransitionsBuilders.slideLeftWithFade,
       duration: Duration(milliseconds: 200),
     ),
   ];

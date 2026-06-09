@@ -90,18 +90,21 @@ class Result {
 class User {
   int? id;
   String? phoneNumber;
+  String? name;
 
-  User({this.id, this.phoneNumber});
+  User({this.id, this.phoneNumber, this.name});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     phoneNumber = json['phone_number'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['phone_number'] = this.phoneNumber;
+    data['name'] = this.name;
     return data;
   }
 }
@@ -124,6 +127,7 @@ class Device {
     return data;
   }
 }
+
 
 class ErrorModel {
   String? message;

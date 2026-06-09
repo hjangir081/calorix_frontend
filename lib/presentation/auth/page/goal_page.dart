@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:calorix_app/presentation/auth/page/meals_preferences_page.dart';
 import 'package:calorix_app/utils/constants/app_strings.dart';
 import 'package:calorix_app/utils/services/app_snackbar.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,12 @@ class GoalPage extends ConsumerWidget {
     final notifier = ref.read(profileProvider.notifier);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        automaticallyImplyLeading: false,
+        automaticallyImplyActions: false,
+      ),
       body: SafeArea(
         child: AppPadding(
           child: Column(
@@ -29,7 +36,7 @@ class GoalPage extends ConsumerWidget {
               AppGaps.h(context, 40),
               Text(
                 AppStrings.whatsYourGoal,
-                style: AppQuicksandText.title(context)
+                style: AppQuicksandText.title(context, color: AppColors.white)
                     .copyWith(fontWeight: FontWeight.bold),
               ),
               AppGaps.h24(context),
@@ -67,7 +74,7 @@ class GoalPage extends ConsumerWidget {
                   debugPrint("Goal: ${profileState.goal}");
                   debugPrint("Height: ${profileState.height}");
                   debugPrint("Weight: ${profileState.weight}");
-                  context.router.replaceAll([const SettingProfileRoute()]);
+                  context.router.push(const MealsPreferencesRoute());
                 },
               ),
 
@@ -77,7 +84,7 @@ class GoalPage extends ConsumerWidget {
                 child: Text(
                   AppBtnStrings.back,
                   style: AppQuicksandText.bodyLarge(context).copyWith(
-                    color: AppColors.gray,
+                    color: AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -101,7 +108,7 @@ class GoalPage extends ConsumerWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? AppColors.primaryColor : AppColors.gray,
+              color: isSelected ? AppColors.primaryColor : AppColors.textSecondary,
               width: isSelected ? 2 : 1,
             ),
             color: isSelected
@@ -111,7 +118,7 @@ class GoalPage extends ConsumerWidget {
           child: Row(
             children: [
               Icon(icon,
-                  color: isSelected ? AppColors.primaryColor : AppColors.gray),
+                  color: isSelected ? AppColors.primaryColor : AppColors.textSecondary),
               const SizedBox(width: 12),
               Text(
                 label,
@@ -123,7 +130,7 @@ class GoalPage extends ConsumerWidget {
               const Spacer(),
               Icon(
                 isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: isSelected ? AppColors.primaryColor : AppColors.gray,
+                color: isSelected ? AppColors.primaryColor : AppColors.textSecondary,
               ),
             ],
           ),

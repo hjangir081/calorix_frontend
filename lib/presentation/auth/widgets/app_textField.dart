@@ -15,6 +15,7 @@ class AppTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final bool isPassword;
   final bool enabled;
+  final bool borderColor;
   final String? prefixIcon;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
@@ -27,6 +28,7 @@ class AppTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final String? initialValue;
+  final TextAlign? textAlignment;
 
   const AppTextField({
     super.key,
@@ -48,6 +50,8 @@ class AppTextField extends StatefulWidget {
     this.focusNode,
     this.textInputAction,
     this.initialValue,
+    this.borderColor = true,
+    this.textAlignment = TextAlign.start,
   });
 
   @override
@@ -74,14 +78,16 @@ class _AppTextFieldState extends State<AppTextField> {
         TextFormField(
           initialValue: widget.initialValue,
           controller: widget.controller,
-          cursorColor: AppColors.black,
+          cursorColor: AppColors.white,
           keyboardType: widget.keyboardType,
           obscureText: isPassword ? _obscureText : false,
           enabled: widget.enabled,
           validator: widget.validator,
+          textAlign: widget.textAlignment ?? TextAlign.start,
           onChanged: widget.onChanged,
           style: AppQuicksandText.bodyLarge(
             context,
+            color: AppColors.white
           ).copyWith(fontWeight: FontWeight.w500),
           onFieldSubmitted: widget.onSubmitted,
           inputFormatters: widget.inputFormatters,
@@ -93,11 +99,15 @@ class _AppTextFieldState extends State<AppTextField> {
             errorText: widget.errorText,
             errorStyle: const TextStyle(height: 0, color: Colors.red),
             hintText: widget.hint,
+            hintStyle: TextStyle(color: AppColors.textSecondary),
+            prefixIconColor: AppColors.white,
+            suffixIconColor: AppColors.white,
             prefixIcon: widget.prefixIcon != null
                 ? Padding(
                     padding: const EdgeInsets.all(12), // controls spacing
                     child: Image.asset(
                       widget.prefixIcon!,
+                      color: AppColors.white,
                       width: AppMediaQuery.width(context)*.02,
                       height: AppMediaQuery.height(context)*.02,
                       fit: BoxFit.contain,
@@ -121,11 +131,11 @@ class _AppTextFieldState extends State<AppTextField> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.lg(context)),
-              borderSide: BorderSide(color: AppColors.gray),
+              borderSide: BorderSide(color:  AppColors.textSecondary ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.lg(context)),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
+              borderSide: BorderSide(color: widget.borderColor == true ? AppColors.primaryColor : AppColors.textSecondary, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.lg(context)),

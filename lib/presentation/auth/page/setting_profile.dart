@@ -15,13 +15,11 @@ class SettingProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    // ✅ Listen to profile state
     ref.listen(profileProvider, (prev, next) {
       if (next.status == ProfileStatus.success &&
           prev?.status != ProfileStatus.success) {
 
-        Future.delayed(const Duration(milliseconds: 1500), () {
+        Future.delayed(const Duration(milliseconds: 2000), () {
           context.router.replaceAll([const DashboardRoute()]);
         });
       }
@@ -35,8 +33,6 @@ class SettingProfilePage extends ConsumerWidget {
         context.router.back();
       }
     });
-
-    // ✅ Call API only once
     final profileState = ref.watch(profileProvider);
 
     if (profileState.status == ProfileStatus.initial) {
@@ -46,6 +42,12 @@ class SettingProfilePage extends ConsumerWidget {
     }
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        automaticallyImplyLeading: false,
+        automaticallyImplyActions: false,
+      ),
       body: Center(
         child: Lottie.asset(
           AppAnimations.settingProfile,

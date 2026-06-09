@@ -1,17 +1,19 @@
 import 'package:calorix_app/config/theme/app_theme.dart';
 import 'package:calorix_app/utils/services/app_snackbar.dart';
+import 'package:calorix_app/utils/services/notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'config/di/injector.dart';
 import 'config/router/app_router.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  /*WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );*/
+  );
   await initializeApp();
 
   runApp(

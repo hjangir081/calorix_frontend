@@ -31,14 +31,17 @@ class CalorieGauge extends StatelessWidget {
         vertical: AppMediaQuery.height(context) * .012,
       ),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor.withOpacity(.04),
+        color: AppColors.card,
+        border: Border.all(
+          color: AppColors.divider,
+        ),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(
         children: [
           Text(
             "TODAY'S CALORIES",
-            style: AppQuicksandText.title(context).copyWith(
+            style: AppQuicksandText.title(context, color: AppColors.textPrimary).copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -88,7 +91,7 @@ class CalorieGauge extends StatelessWidget {
                                 text: TextSpan(
                                   style: AppQuicksandText.bodyLarge(context)
                                       .copyWith(
-                                    color: AppColors.black,
+                                    color: AppColors.textPrimary,
                                     fontWeight: FontWeight.w600,
                                   ),
                                   children: [
@@ -97,8 +100,8 @@ class CalorieGauge extends StatelessWidget {
                                       style: AppQuicksandText.title(context)
                                           .copyWith(
                                         color: isExceeded
-                                            ? Colors.red
-                                            : AppColors.black,
+                                            ? AppColors.danger
+                                            : AppColors.textPrimary,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
@@ -106,7 +109,7 @@ class CalorieGauge extends StatelessWidget {
                                       text: "of $total kcal goal",
                                       style: AppQuicksandText.body(context)
                                           .copyWith(
-                                        color: AppColors.gray,
+                                        color: AppColors.textSecondary,
                                       ),
                                     ),
                                   ],
@@ -164,13 +167,12 @@ class _StatItem extends StatelessWidget {
         Text(
           label,
           style: AppQuicksandText.body(context).copyWith(
-            color: AppColors.gray,
-          ),
+            color: AppColors.textSecondary),
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: AppQuicksandText.bodyLarge(context).copyWith(
+          style: AppQuicksandText.bodyLarge(context, color: AppColors.textPrimary,).copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -195,7 +197,7 @@ class _ArcPainter extends CustomPainter {
     const strokeWidth = 18.0;
 
     final bgPaint = Paint()
-      ..color = Colors.grey.withOpacity(.15)
+      ..color = AppColors.divider
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -204,12 +206,12 @@ class _ArcPainter extends CustomPainter {
       ..shader = LinearGradient(
         colors: isExceeded
             ? [
-          Colors.redAccent,
-          Colors.red,
+          AppColors.warning,
+          AppColors.danger,
         ]
             : [
-          Colors.orange,
-          Colors.deepOrange,
+          AppColors.primaryColor,
+          AppColors.secondaryColor,
         ],
       ).createShader(rect)
       ..style = PaintingStyle.stroke
@@ -245,7 +247,7 @@ class _ArcPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(dx, dy),
       9,
-      Paint()..color = Colors.white,
+      Paint()..color = AppColors.surface,
     );
 
     canvas.drawCircle(
@@ -253,8 +255,8 @@ class _ArcPainter extends CustomPainter {
       5,
       Paint()
         ..color = isExceeded
-            ? Colors.red
-            : Colors.deepOrange,
+            ? AppColors.danger
+            : AppColors.primaryColor
     );
   }
 

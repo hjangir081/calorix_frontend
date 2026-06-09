@@ -20,6 +20,7 @@ class WeightPage extends ConsumerWidget {
     final notifier = ref.read(profileProvider.notifier);
     final int currentWeight = int.tryParse(profileState.weight ?? '') ?? 62;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: SafeArea(
         child: AppPadding(
           child: Column(
@@ -28,7 +29,7 @@ class WeightPage extends ConsumerWidget {
               AppGaps.h(context, 40),
               Text(
                 AppStrings.weightQuestion,
-                style: AppQuicksandText.title(context)
+                style: AppQuicksandText.title(context, color: AppColors.white)
                     .copyWith(fontWeight: FontWeight.bold),
               ),
               AppGaps.h24(context),
@@ -62,7 +63,7 @@ class WeightPage extends ConsumerWidget {
                           style: AppQuicksandText.bodyLarge(context).copyWith(
                             color: value == currentWeight
                                 ? AppColors.primaryColor
-                                : AppColors.gray,
+                                : AppColors.textSecondary,
                             fontWeight: value == currentWeight
                                 ? FontWeight.bold
                                 : FontWeight.normal,
@@ -104,7 +105,7 @@ class WeightPage extends ConsumerWidget {
                   child: Text(
                     AppBtnStrings.back,
                     style: AppQuicksandText.bodyLarge(context).copyWith(
-                      color: AppColors.gray,
+                      color: AppColors.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

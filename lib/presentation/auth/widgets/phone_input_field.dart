@@ -66,9 +66,8 @@ class PhoneInputField extends ConsumerWidget {
                     ),
                   ),
 
-                  const Divider(height: 1),
+                  const Divider(height: 1, color: AppColors.divider,),
 
-                  // 🔹 List
                   Expanded(
                     child: ListView.builder(
                       controller: scrollController, // 🔥 IMPORTANT
@@ -119,7 +118,7 @@ class PhoneInputField extends ConsumerWidget {
       controller: controller,
       keyboardType: TextInputType.phone,
       enabled: enabled,
-      cursorColor: AppColors.black,
+      cursorColor: AppColors.white,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(selectedCountry.maxLength),
@@ -132,7 +131,7 @@ class PhoneInputField extends ConsumerWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.lg(context)),
-          borderSide: BorderSide(color: AppColors.gray),
+          borderSide: BorderSide(color: AppColors.textSecondary),
         ),
 
         focusedBorder: OutlineInputBorder(

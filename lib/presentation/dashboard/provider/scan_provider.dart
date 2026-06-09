@@ -72,7 +72,7 @@ class ScanNotifier extends StateNotifier<ScanState> {
 
   Future<String> assetToFilePath(String assetPath) async {
     final byteData = await rootBundle.load(assetPath);
-    final file = File('${(await getTemporaryDirectory()).path}/apple.jpeg');
+    final file = File('${(await getTemporaryDirectory()).path}/dal.jpeg');
     await file.writeAsBytes(byteData.buffer.asUint8List());
     return file.path;
   }
@@ -83,9 +83,8 @@ class ScanNotifier extends StateNotifier<ScanState> {
 
       String imagePath;
 
-      // 🔥 SIMULATOR FIX
       if (!state.isInitialized || state.controller == null) {
-        imagePath = await assetToFilePath('assets/images/apple.jpeg');
+        imagePath = await assetToFilePath('assets/images/dal.jpeg');
       } else {
         final image = await state.controller!.takePicture();
         imagePath = image.path;

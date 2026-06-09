@@ -19,52 +19,36 @@ class HistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mealHistoryState = ref.watch(mealHistoryProvider);
-    final selectedDate = ref.watch(selectedHistoryDateProvider,);
-    final scrollController =
-    ref.watch(
-      historyDateScrollProvider,
-    );
-    if (mealHistoryState.status ==
-        MealHistoryStatus.initial) {
-
+    final selectedDate = ref.watch(selectedHistoryDateProvider);
+    final scrollController = ref.watch(historyDateScrollProvider);
+    if (mealHistoryState.status == MealHistoryStatus.initial) {
       Future.microtask(() {
-
         ref
-            .read(
-          mealHistoryProvider.notifier,
-        )
+            .read(mealHistoryProvider.notifier)
             .getMealHistory(
-          date:
-          AppDateFormatter
-              .formatDateForApi(
-            selectedDate,
-          ),
-        );
+              date: AppDateFormatter.formatDateForApi(selectedDate),
+            );
       });
     }
     final data = mealHistoryState.data;
     return Scaffold(
-      backgroundColor: AppColors.white,
-
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
+        backgroundColor: AppColors.background,
         centerTitle: true,
-        scrolledUnderElevation: 0,
-
+        automaticallyImplyLeading: false,
+        automaticallyImplyActions: false,
         title: Text(
           'History',
-          style: AppQuicksandText.heading(context).copyWith(
-            color: AppColors.black,
-            fontWeight: FontWeight.w700,
-          ),
+          style: AppQuicksandText.heading(
+            context,
+          ).copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
         ),
       ),
 
       body: AppPadding(
         child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 90,
@@ -72,117 +56,60 @@ class HistoryPage extends ConsumerWidget {
                 controller: scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: 8,
-                itemBuilder:
-                    (context, index) {
-
-                  final date =
-                  DateTime.now().subtract(
-                    Duration(
-                      days: 7 - index,
-                    ),
+                itemBuilder: (context, index) {
+                  final date = DateTime.now().subtract(
+                    Duration(days: 7 - index),
                   );
 
                   final isSelected =
-                      AppDateFormatter
-                          .formatDateForApi(
-                        date,
-                      ) ==
-                          AppDateFormatter
-                              .formatDateForApi(
-                            selectedDate,
-                          );
+                      AppDateFormatter.formatDateForApi(date) ==
+                      AppDateFormatter.formatDateForApi(selectedDate);
 
                   return GestureDetector(
                     onTap: () {
+                      ref.read(selectedHistoryDateProvider.notifier).state =
+                          date;
 
                       ref
-                          .read(
-                        selectedHistoryDateProvider
-                            .notifier,
-                      )
-                          .state = date;
-
-                      ref
-                          .read(
-                        mealHistoryProvider
-                            .notifier,
-                      )
+                          .read(mealHistoryProvider.notifier)
                           .getMealHistory(
-                        date: AppDateFormatter.formatDateForApi(date,),
-                      );
+                            date: AppDateFormatter.formatDateForApi(date),
+                          );
                     },
 
                     child: Container(
                       width: 70,
 
-                      margin:
-                      const EdgeInsets.only(
-                        right: 12,
-                      ),
+                      margin: const EdgeInsets.only(right: 12),
 
                       decoration: BoxDecoration(
-                        color:
-                        isSelected
-                            ? AppColors
-                            .primaryColor
-                            : Colors
-                            .grey
-                            .shade100,
-
-                        borderRadius:
-                        BorderRadius.circular(
-                          22,
-                        ),
+                        color: isSelected
+                            ? AppColors.primaryColor
+                            : AppColors.surface,
+                        borderRadius: BorderRadius.circular(22),
                       ),
 
                       child: Column(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
 
                         children: [
-
                           Text(
-                            AppDateFormatter.getDayName(
-                              date,
-                            ),
+                            AppDateFormatter.getDayName(date),
 
-                            style:
-                            AppQuicksandText
-                                .body(
-                              context,
-                            )
-                                .copyWith(
-                              color:
-                              isSelected
-                                  ? AppColors
-                                  .black
-                                  : AppColors
-                                  .gray,
+                            style: AppQuicksandText.body(context).copyWith(
+                              color: isSelected
+                                  ? AppColors.black
+                                  : AppColors.textSecondary,
 
-                              fontWeight:
-                              FontWeight
-                                  .w700,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-
                           AppGaps.h8(context),
-
                           Text(
                             '${date.day}',
-
-                            style:
-                            AppQuicksandText
-                                .title(
-                              context,
-                            )
-                                .copyWith(
-                              color:
-                              AppColors
-                                  .black,
-
-                              fontWeight:
-                              FontWeight
-                                  .bold,
+                            style: AppQuicksandText.title(context).copyWith(
+                              color: isSelected ? AppColors.black : AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
@@ -193,34 +120,22 @@ class HistoryPage extends ConsumerWidget {
               ),
             ),
             AppGaps.h(context, 12),
-
             // DATE
             Row(
-              mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
-                      AppDateFormatter
-                          .formatDate(
-                        data?.result?.date,
-                      ),
+                      AppDateFormatter.formatDate(data?.result?.date),
 
-                      style:
-                      AppQuicksandText.title(context)
-                          .copyWith(
-                        fontWeight:
-                        FontWeight.w700,
+                      style: AppQuicksandText.title(context).copyWith(
+                        fontWeight: FontWeight.w700,
 
-                        color:
-                        AppColors.black,
+                        color: AppColors.black,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -232,94 +147,75 @@ class HistoryPage extends ConsumerWidget {
             Container(
               width: double.infinity,
 
-              padding:
-              const EdgeInsets.all(18),
+              padding: const EdgeInsets.all(18),
 
               decoration: BoxDecoration(
-                color: AppColors.black,
-
-                borderRadius:
-                BorderRadius.circular(28),
+                color: AppColors.card,
+                border: Border.all(color: AppColors.divider),
+                borderRadius: BorderRadius.circular(28),
               ),
 
               child: Column(
                 children: [
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
 
                     children: [
-
                       _calorieValue(
                         context,
-                        value: '${data?.result?.summary?.caloriesTarget ?? 'N/A'}',
+                        value:
+                            '${data?.result?.summary?.caloriesTarget ?? 'N/A'}',
                         label: 'Goal',
-                        color:
-                        AppColors.primaryColor,
+                        color: AppColors.primaryColor,
                       ),
 
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
 
                         child: Text(
                           '-',
-                          style:
-                          AppQuicksandText.heading(context)
-                              .copyWith(
-                            color:
-                            AppColors.white,
-                            fontWeight:
-                            FontWeight.bold,
+                          style: AppQuicksandText.heading(context).copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
 
                       _calorieValue(
                         context,
-                        value: '${data?.result?.summary?.caloriesConsumed ?? 'N/A'}',
+                        value:
+                            '${data?.result?.summary?.caloriesConsumed ?? 'N/A'}',
                         label: 'Food',
-                        color:
-                        AppColors.secondaryColor,
+                        color: AppColors.secondaryColor,
                       ),
 
                       Padding(
-                        padding:
-                        const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
 
                         child: Text(
                           '=',
-                          style:
-                          AppQuicksandText.heading(context)
-                              .copyWith(
-                            color:
-                            AppColors.white,
-                            fontWeight:
-                            FontWeight.bold,
+                          style: AppQuicksandText.heading(context).copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
 
                       _calorieValue(
                         context,
-                        value: '${data?.result?.summary?.remainingCalories ?? 'N/A'}',
+                        value:
+                            '${data?.result?.summary?.remainingCalories ?? 'N/A'}',
                         label: 'Remaining',
-                        color:
-                        AppColors.white,
+                        color: AppColors.white,
                       ),
                     ],
                   ),
 
                   AppGaps.h8(context),
-
                 ],
-              )
+              ),
             ),
 
             AppGaps.h(context, 30),
@@ -330,104 +226,76 @@ class HistoryPage extends ConsumerWidget {
                 child: Column(
                   children: [
                     Container(
-                      height: AppMediaQuery.height(context)*.07,
+                      height: AppMediaQuery.height(context) * .07,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius:
-                        BorderRadius.circular(20),
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Align(
                         alignment: Alignment.centerLeft,
-              
+
                         child: TabBar(
                           isScrollable: true,
-                          overlayColor:
-                          WidgetStateProperty.all(
+                          overlayColor: WidgetStateProperty.all(
                             Colors.transparent,
                           ),
-                          splashFactory:
-                          NoSplash.splashFactory,
+                          splashFactory: NoSplash.splashFactory,
                           tabAlignment: TabAlignment.start,
-              
-                          labelPadding:
-                          EdgeInsets.only(
-                            right: AppMediaQuery.width(context)*.02,
-                            left: AppMediaQuery.width(context)*.02
+
+                          labelPadding: EdgeInsets.only(
+                            right: AppMediaQuery.width(context) * .02,
+                            left: AppMediaQuery.width(context) * .02,
                           ),
-                          indicatorPadding:
-                          EdgeInsets.zero,
-              
+                          indicatorPadding: EdgeInsets.zero,
+
                           dividerColor: Colors.transparent,
-              
+
                           indicator: BoxDecoration(
                             color: AppColors.primaryColor,
-                            borderRadius:
-                            BorderRadius.circular(18),
+                            borderRadius: BorderRadius.circular(18),
                           ),
-              
+
                           labelColor: AppColors.black,
-              
-                          unselectedLabelColor:
-                          AppColors.gray,
-              
-                          labelStyle:
-                          AppQuicksandText.body(context)
-                              .copyWith(
-                            fontWeight:
-                            FontWeight.w700,
-                          ),
-              
+
+                          unselectedLabelColor: AppColors.textSecondary,
+
+                          labelStyle: AppQuicksandText.body(
+                            context,
+                          ).copyWith(fontWeight: FontWeight.w700),
+
                           tabs: [
-              
-                            _mealTab(
-                              context: context,
-                              title: 'Breakfast',
-                            ),
-              
-                            _mealTab(
-                              context: context,
-                              title: 'Lunch',
-                            ),
-              
-                            _mealTab(
-                              context: context,
-                              title: 'Dinner',
-                            ),
-              
-                            _mealTab(
-                              context: context,
-                              title: 'Snack',
-                            ),
+                            _mealTab(context: context, title: 'Breakfast'),
+
+                            _mealTab(context: context, title: 'Lunch'),
+
+                            _mealTab(context: context, title: 'Dinner'),
+
+                            _mealTab(context: context, title: 'Snack'),
                           ],
                         ),
                       ),
                     ),
-              
+
                     AppGaps.h(context, 24),
-              
+
                     Expanded(
-              
                       child: TabBarView(
                         children: [
                           _buildMealList(
                             context,
-                            data?.result?.meals
-                                ?.breakfast?.items,
+                            data?.result?.meals?.breakfast?.items,
                           ),
                           _buildMealList(
                             context,
-                            data?.result?.meals
-                                ?.lunch?.items,
+                            data?.result?.meals?.lunch?.items,
                           ),
                           _buildMealList(
                             context,
-                            data?.result?.meals
-                                ?.dinner?.items,
+                            data?.result?.meals?.dinner?.items,
                           ),
                           _buildMealList(
                             context,
-                            data?.result?.meals
-                                ?.snack?.items,
+                            data?.result?.meals?.snack?.items,
                           ),
                         ],
                       ),
@@ -442,23 +310,15 @@ class HistoryPage extends ConsumerWidget {
       ),
     );
   }
-  Widget _buildMealList(
-      BuildContext context,
-      List<Items>? items,
-      ) {
 
-    if (items == null ||
-        items.isEmpty) {
-
+  Widget _buildMealList(BuildContext context, List<Items>? items) {
+    if (items == null || items.isEmpty) {
       return Center(
         child: Text(
           'No meals added',
-          style:
-          AppQuicksandText.body(context)
-              .copyWith(
-            color:
-            AppColors.gray,
-          ),
+          style: AppQuicksandText.body(
+            context,
+          ).copyWith(color: AppColors.textSecondary),
         ),
       );
     }
@@ -466,150 +326,110 @@ class HistoryPage extends ConsumerWidget {
     return ListView.builder(
       itemCount: items.length,
 
-      itemBuilder:
-          (context, index) {
-
+      itemBuilder: (context, index) {
         final item = items[index];
 
         return _foodTile(
           context,
 
-          foodName:
-          item.foodName ?? '',
+          foodName: item.foodName ?? '',
 
-          calories:
-          '${item.calories ?? 0} kcal',
+          calories: '${item.calories ?? 0} kcal',
 
-          quantity:
-          '${item.quantity ?? 0} serving',
+          quantity: '${item.quantity ?? 0} serving',
 
-          protein:
-          '${item.protein ?? 0}g',
+          protein: '${item.protein ?? 0}g',
         );
       },
     );
   }
-  Widget _mealTab({
-    required BuildContext context,
-    required String title,
-  }) {
 
+  Widget _mealTab({required BuildContext context, required String title}) {
     return Tab(
       child: Container(
-        width: AppMediaQuery.width(context)*.25,
+        width: AppMediaQuery.width(context) * .25,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius:
-          BorderRadius.circular(18),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(18)),
         child: Text(title),
       ),
     );
   }
 
   Widget _calorieValue(
-      BuildContext context, {
-        required String value,
-        required String label,
-        required Color color,
-      }) {
-
+    BuildContext context, {
+    required String value,
+    required String label,
+    required Color color,
+  }) {
     return Column(
       children: [
-
         Text(
           value,
-          style:
-          AppQuicksandText.heading(context)
-              .copyWith(
-            color: color,
-            fontWeight:
-            FontWeight.bold,
-          ),
+          style: AppQuicksandText.heading(
+            context,
+          ).copyWith(color: color, fontWeight: FontWeight.bold),
         ),
 
         AppGaps.h4(context),
 
         Text(
           label,
-          style:
-          AppQuicksandText.body(context)
-              .copyWith(
-            color:
-            AppColors.white
-                .withOpacity(.7),
-          ),
+          style: AppQuicksandText.body(
+            context,
+          ).copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
   }
 
   Widget _foodTile(
-      BuildContext context, {
-        required String foodName,
-        required String calories,
-        required String quantity,
-        required String protein,
-      }) {
-
+    BuildContext context, {
+    required String foodName,
+    required String calories,
+    required String quantity,
+    required String protein,
+  }) {
     return Container(
-      margin:
-      const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 14),
 
-      padding:
-      const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(14),
 
       decoration: BoxDecoration(
-        color: AppColors.white,
-
-        borderRadius:
-        BorderRadius.circular(20),
+        color: AppColors.card,
+        border: Border.all(color: AppColors.divider),
+        borderRadius: BorderRadius.circular(20),
       ),
 
       child: Row(
         children: [
-
           Container(
             height: 62,
             width: 62,
 
             decoration: BoxDecoration(
-              color:
-              AppColors.primaryColor
-                  .withOpacity(.25),
+              color: AppColors.primaryColor.withOpacity(.12),
 
-              borderRadius:
-              BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(18),
             ),
 
-            child: const Icon(
-              Icons.fastfood_rounded,
-              size: 30,
-            ),
+            child: const Icon(Icons.fastfood_rounded, size: 30),
           ),
 
           AppGaps.w16(context),
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-
                 Text(
                   foodName,
                   maxLines: 1,
-                  overflow:
-                  TextOverflow.ellipsis,
+                  overflow: TextOverflow.ellipsis,
 
-                  style:
-                  AppQuicksandText.bodyLarge(context)
-                      .copyWith(
-                    fontWeight:
-                    FontWeight.w700,
-                    color:
-                    AppColors.black,
+                  style: AppQuicksandText.bodyLarge(context).copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
                 ),
 
@@ -617,28 +437,20 @@ class HistoryPage extends ConsumerWidget {
 
                 Text(
                   quantity,
-                  style:
-                  AppQuicksandText.body(context)
-                      .copyWith(
-                    color:
-                    AppColors.gray,
-                  ),
+                  style: AppQuicksandText.body(
+                    context,
+                  ).copyWith(color: AppColors.textSecondary),
                 ),
 
                 AppGaps.h8(context),
 
                 Row(
                   children: [
-
                     Text(
                       calories,
-                      style:
-                      AppQuicksandText.body(context)
-                          .copyWith(
-                        color:
-                        AppColors.secondaryColor,
-                        fontWeight:
-                        FontWeight.w700,
+                      style: AppQuicksandText.body(context).copyWith(
+                        color: AppColors.secondaryColor,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
 
@@ -646,13 +458,9 @@ class HistoryPage extends ConsumerWidget {
 
                     Text(
                       protein,
-                      style:
-                      AppQuicksandText.body(context)
-                          .copyWith(
-                        color:
-                        AppColors.gray,
-                        fontWeight:
-                        FontWeight.w600,
+                      style: AppQuicksandText.body(context).copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -664,19 +472,13 @@ class HistoryPage extends ConsumerWidget {
           PopupMenuButton(
             icon: const Icon(
               Icons.more_vert_rounded,
+              color: AppColors.textSecondary,
             ),
 
             itemBuilder: (_) => [
+              const PopupMenuItem(value: 'edit', child: Text('Edit')),
 
-              const PopupMenuItem(
-                value: 'edit',
-                child: Text('Edit'),
-              ),
-
-              const PopupMenuItem(
-                value: 'delete',
-                child: Text('Delete'),
-              ),
+              const PopupMenuItem(value: 'delete', child: Text('Delete')),
             ],
           ),
         ],
@@ -685,48 +487,36 @@ class HistoryPage extends ConsumerWidget {
   }
 
   Widget _macroItem(
-      BuildContext context, {
-        required String title,
-        required String value,
-        required Color color,
-      }) {
-
+    BuildContext context, {
+    required String title,
+    required String value,
+    required Color color,
+  }) {
     return Column(
       children: [
-
         Container(
           height: 14,
           width: 14,
 
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
 
         AppGaps.h8(context),
 
         Text(
           value,
-          style:
-          AppQuicksandText.bodyLarge(context)
-              .copyWith(
-            color: AppColors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppQuicksandText.bodyLarge(
+            context,
+          ).copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
         ),
 
         AppGaps.h4(context),
 
         Text(
           title,
-          style:
-          AppQuicksandText.body(context)
-              .copyWith(
-            color:
-            AppColors.white
-                .withOpacity(.7),
-          ),
+          style: AppQuicksandText.body(
+            context,
+          ).copyWith(color: AppColors.textSecondary),
         ),
       ],
     );
