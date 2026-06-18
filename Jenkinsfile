@@ -1,39 +1,37 @@
 pipeline {
     agent any
 
-    environment {
-        FLUTTER = "/Users/himanshu/Documents/development/sdk/flutter/bin/flutter"
-    }
-
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
 
         stage('Flutter Version') {
             steps {
-                sh '${FLUTTER} --version'
+                sh '''
+                /Users/himanshu/Documents/development/sdk/flutter/bin/flutter --version
+                '''
             }
         }
 
         stage('Pub Get') {
             steps {
-                sh '${FLUTTER} pub get'
+                sh '''
+                /Users/himanshu/Documents/development/sdk/flutter/bin/flutter pub get
+                '''
             }
         }
 
         stage('Analyze') {
             steps {
-                sh '${FLUTTER} analyze'
+                sh '''
+                /Users/himanshu/Documents/development/sdk/flutter/bin/flutter analyze
+                '''
             }
         }
 
         stage('Build APK') {
             steps {
-                sh '${FLUTTER} build apk --release'
+                sh '''
+                /Users/himanshu/Documents/development/sdk/flutter/bin/flutter build apk --release
+                '''
             }
         }
     }
