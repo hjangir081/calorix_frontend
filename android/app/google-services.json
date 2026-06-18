@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634611303787",
+    "project_id": "calorix-5694a",
+    "storage_bucket": "calorix-5694a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634611303787:android:ce1d8020b43f99f738b82e",
+        "android_client_info": {
+          "package_name": "com.calorix.calorix_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZzSgsN5dh5CE61JOPwUjpX5C8FRQuuW0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
