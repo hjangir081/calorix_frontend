@@ -1,8 +1,6 @@
 pipeline {
     agent any
-
     stages {
-
         stage('Flutter Version') {
             steps {
                 sh '''
@@ -10,7 +8,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Pub Get') {
             steps {
                 sh '''
@@ -18,7 +15,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Analyze') {
             steps {
                 sh '''
@@ -26,7 +22,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Build APK') {
             steps {
                 sh '''
@@ -35,7 +30,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/*.apk'
